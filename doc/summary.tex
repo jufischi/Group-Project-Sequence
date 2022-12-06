@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage[style=numeric]{biblatex}
+\addbibresource{references.bib}
+
+\title{Phylogeography using Sankoff}
+\author{Julia Fischer 
+\and 
+Peter Heringer
+\and
+Michael Mederer
+\and
+Felix Seidel}
+
+\begin{document}
+
+\maketitle
+
+In \cite{reimering2020phylogeographic}, the authors examine the geogprahic
+origins of the 2009 H1N1 influenca pandemic by applying the Sankoff parsimony
+method to a phylogenetic tree using a cost matrix built of the geographic
+distances between the sampling locations for each leaf of the tree.
+
+Each sample is mapped to the closest airport. From this, three different kinds
+of distances are calculated:
+\begin{enumerate}
+    \item Equal distance: Each airport has a distance of 1 to the others. This
+    makes the Sankoff-Algorithm behave like Fitch-Algorithm.
+    \item Geographic distance: The actual geographic distances between different
+    airports is used.
+    \item Effective distances: A infection is more likely to spread from
+    airport $A$ to airport $B$ if there are many people traveling from $A$ to
+    $B$. Thus, the effective distances are calculated by using passenger data
+    for each combination of airports.
+\end{enumerate}
+
+A phylogenetic tree is constructed from the sampled data, the method of choice
+seems to be not relevant. Using that tree, the Sankoff parsimony algorithm is
+used to infer the geographic positions of the internal nodes.
+
+\printbibliography
+
+\end{document}
