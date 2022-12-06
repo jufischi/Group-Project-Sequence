@@ -2,7 +2,7 @@
 \usepackage[style=numeric]{biblatex}
 \addbibresource{references.bib}
 
-\title{Applying Sankoff Parsimony to Phylogeographics}
+\title{Applying Camin-Sokal Parsimony to cell lineage reconstruction of zebra fish}
 \author{Julia Fischer 
 \and 
 Peter Heringer
@@ -15,14 +15,14 @@ Felix Seidel}
 
 \maketitle
 \begin{abstract}
-In \cite{reimering2020phylogeographic}, the authors examine the geogprahic
-origins of the 2009 H1N1 influenca pandemic by applying the Sankoff parsimony
-method to a phylogenetic tree using a cost matrix built of the geographic
-distances between the sampling locations for each leaf of the tree. 
-We want to implement the Sankoff parsimony method in Python, apply it to the
-original dataset \cite{reimering_distance_2019} and create some plots
-visualizing the results. As an optional extension, we want to recreate the
-experiments using more recent travel data.
+In \cite{mckenna_whole-organism_2016}, the authors modify the genome of a zebra
+fish embryo to contain a known sequence of CRISPR targets. After some time, the
+authors triggered random mutations in this sequence in the embryo. Finally, they examined the
+resulting differences to the original sequence and created a
+binary barcode for each cell. Using this and the Camin-Sokal-Parsimony approach,
+the authors tried to reconstruct the phylogenetic tree to reveal the lineage of
+each embryonic cell. We want to reproduce those trees using the original data in
+Python. 
 \end{abstract}
 
 \printbibliography
