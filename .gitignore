@@ -3,6 +3,9 @@
 
 *.pdf
 
+data/*
+!data/.gitkeep
+
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
 *.aux
