@@ -1,32 +1,120 @@
 import unittest
 
+
 class Node:
-    def __init__(self, data, parent = None, edge_length_to_parent = None):
+    """
+    A class used to represent a Node in a tree.
+
+    Attributes
+    ----------
+    data :
+        The label associated with the node
+    parent : Node, optional
+        The parent node of the node (default is None)
+    edge_length_to_parent: float, optional
+        The length of the edge from the node to its parent (default is None)
+    children : list
+        List of Nodes of the children of the Node
+
+    Methods
+    -------
+    add_child(data, edge_length=None)
+        adds a child to the node given its label and an optional edge_length
+    add_child_node(child)
+        adds a child node to the node
+    is_leaf()
+        checks whether the node is a leaf
+    is_root()
+        checks whether the node is the root
+    get_leaves()
+        returns a list of all leaf nodes that are located below the node
+    """
+    def __init__(self, data, parent=None, edge_length_to_parent=None):
+        """
+        Parameters
+        ----------
+        data :
+            The label associated with the node
+        parent : Node, optional
+            The parent node of the node (default is None)
+        edge_length_to_parent: float, optional
+            The length of the edge from the node to its parent (default is None)
+        """
         self.data = data
         self.parent = parent
         self.edge_length_to_parent = edge_length_to_parent
         self.children = []
 
-    def add_child(self, data, edge_length = None):
+    def add_child(self, data, edge_length=None):
+        """
+        Adds a child to the node given its label and an optional edge_length.
+
+        Parameters
+        ----------
+        data :
+            The label associated with the node
+        edge_length: float, optional
+            The length of the edge from the node to its parent (default is None)
+        """
         child = Node(data, self, edge_length)
         self.add_child_node(child)
 
     def add_child_node(self, child):
+        """
+        Adds a child node to the node.
+
+        Parameters
+        ----------
+        child : Node
+            The node that is added to the node as a child.
+        """
         self.children.append(child)
 
     def is_leaf(self):
+        """
+        Checks whether the node is a leaf node.
+
+        Returns
+        -------
+        boolean
+            True if node is a leaf, False else
+        """
         return len(self.children) == 0
 
     def is_root(self):
-        return self.parent == None
+        """
+        Checks whether the node is the root node.
+
+        Returns
+        -------
+        boolean
+            True if node is the root, False else
+        """
+        return self.parent is None
 
     def __str__(self):
+        """
+        Returns a formatted output String for printing the tree starting at the node.
+
+        Returns
+        -------
+        String
+            formatted output
+        """
         result = f"{self.data}:{self.edge_length_to_parent}\n[\n"
         for child in self.children:
             result += str(child)
         return result + "]\n"
 
     def get_leaves(self):
+        """
+        Returns a list of all leaf nodes that are located below the node.
+
+        Returns
+        -------
+        list
+            a list of Nodes containing all leaf nodes below the given node.
+        """
         if self.is_leaf():
             return [self]
         result = []
@@ -36,6 +124,9 @@ class Node:
 
 
 class TestNode(unittest.TestCase):
+    """
+    A class to test the class Node.
+    """
     def test_single_node_data(self):
         data = 1
         node = Node(data)
@@ -77,6 +168,7 @@ class TestNode(unittest.TestCase):
         self.assertIn(3, leaves)
         self.assertIn(5, leaves)
         self.assertIn(6, leaves)
+
 
 if __name__ == '__main__':
     unittest.main()
