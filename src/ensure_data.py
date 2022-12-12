@@ -47,7 +47,7 @@ def download_files(data_folder: str, file_list: List[Tuple[str, str]], dry_run: 
 def clean_folder(path: str, dry_run: bool) -> None:
     for item in Path(path).iterdir():
         if os.path.isdir(item):
-            clean_folder(item)
+            clean_folder(item, dry_run)
         elif os.path.basename(item) != ".gitkeep":
             print(f"deleting {item}...")
             if not dry_run:
