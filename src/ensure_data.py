@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import sys
 from pathlib import Path
 from typing import List, Tuple
 import requests
@@ -65,14 +66,14 @@ def main() -> None:
     if not parser.clean and not parser.download:
         print("- do nothing, you need to specify an action")
         print("use the --help parameter for details")
-        os._exit(os.EX_USAGE)
+        sys.exit(1)
 
     print()  
     repo_root = os.getcwd()
     data_folder = os.path.abspath(os.path.join(repo_root, "..", "data"))
     if not os.path.exists(data_folder):
         print(f"data folder {data_folder} does not exist")
-        os._exit(os.EX_OSERR)
+        sys.exit(1)
 
     print(f"data folder is assumed to be {data_folder}")
     if parser.clean:
