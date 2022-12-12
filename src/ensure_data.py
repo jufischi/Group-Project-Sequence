@@ -7,12 +7,43 @@ from typing import List, Tuple
 import requests
 import argparse
 
-base_tree = ("https://github.com/hzi-bifo/Phylogeography_Paper/blob/8f5c2728808b351462106fdb0d5c6ac48380d374/Data/pH1N1/pH1N1_until_20093004_cds_rooted.labeled.phy", "base tree")
-sampling_locations = ("https://github.com/hzi-bifo/Phylogeography_Paper/blob/8f5c2728808b351462106fdb0d5c6ac48380d374/Data/pH1N1/tipdata.txt", "sampling locations")
-effective_country_distances = ("https://zenodo.org/api/files/f4bf2554-ee90-424a-9c73-a08efaeef0bd/effective.distance.matrix.country.csv", "effective country distances")
-effective_airport_distances = ("https://zenodo.org/api/files/f4bf2554-ee90-424a-9c73-a08efaeef0bd/effective.distance.matrix.csv", "effective airport distances")
-geographic_country_distances = ("https://zenodo.org/api/files/f4bf2554-ee90-424a-9c73-a08efaeef0bd/geographic.distance.matrix.country.csv", "geographic country distances")
-geographic_airport_distances = ("https://zenodo.org/api/files/f4bf2554-ee90-424a-9c73-a08efaeef0bd/geographic.distance.matrix.csv", "geographic airport distances")
+base_tree = (
+    "https://github.com/hzi-bifo/Phylogeography_Paper" +
+    "/blob/8f5c2728808b351462106fdb0d5c6ac48380d374/Data/pH1N1" +
+    "/pH1N1_until_20093004_cds_rooted.labeled.phy",
+    "base tree"
+)
+sampling_locations = (
+    "https://github.com/hzi-bifo" +
+    "/Phylogeography_Paper/blob/8f5c2728808b351462106fdb0d5c6ac48380d374" +
+    "/Data/pH1N1/tipdata.txt",
+    "sampling locations"
+)
+effective_country_distances = (
+    "https://zenodo.org/api/files" +
+    "/f4bf2554-ee90-424a-9c73-a08efaeef0bd" +
+    "/effective.distance.matrix.country.csv",
+    "effective country distances"
+)
+effective_airport_distances = (
+    "https://zenodo.org/api/files" +
+    "/f4bf2554-ee90-424a-9c73-a08efaeef0bd" +
+    "/effective.distance.matrix.csv",
+    "effective airport distances"
+)
+geographic_country_distances = (
+    "https://zenodo.org/api/files" +
+    "/f4bf2554-ee90-424a-9c73-a08efaeef0bd" +
+    "/geographic.distance.matrix.country.csv",
+    "geographic country distances"
+)
+geographic_airport_distances = (
+    "https://zenodo.org/api/files" +
+    "/f4bf2554-ee90-424a-9c73-a08efaeef0bd" +
+    "/geographic.distance.matrix.csv",
+    "geographic airport distances"
+)
+
 
 def create_parser():
     p = argparse.ArgumentParser(description=__doc__,
@@ -20,14 +51,16 @@ def create_parser():
 
     p.add_argument('-c', '--clean',
                    help="Clean the data directory", action=argparse.BooleanOptionalAction)
-    
+
     p.add_argument('-d', '--download',
                    help="Download the data files", action=argparse.BooleanOptionalAction)
 
     p.add_argument('-n', '--no-op',
-                   help="Only perform a dry-run of the action, don't actually do something", action=argparse.BooleanOptionalAction)
+                   help="Only perform a dry-run of the action, don't actually do something",
+                   action=argparse.BooleanOptionalAction)
 
     return(p.parse_args())
+
 
 def ensure_file(description: str, url: str, path: str, dry_run: bool) -> None:
     print(f"checking {description}...")
@@ -41,9 +74,11 @@ def ensure_file(description: str, url: str, path: str, dry_run: bool) -> None:
     else:
         print(f"{description} already exists as {path}")
 
+
 def download_files(data_folder: str, file_list: List[Tuple[str, str]], dry_run: bool) -> None:
     for url, description in file_list:
         ensure_file(description, url, os.path.join(data_folder, os.path.basename(url)), dry_run)
+
 
 def clean_folder(path: str, dry_run: bool) -> None:
     for item in Path(path).iterdir():
@@ -53,6 +88,7 @@ def clean_folder(path: str, dry_run: bool) -> None:
             print(f"deleting {item}...")
             if not dry_run:
                 os.remove(item)
+
 
 def main() -> None:
     parser = create_parser()
@@ -68,7 +104,7 @@ def main() -> None:
         print("use the --help parameter for details")
         sys.exit(1)
 
-    print()  
+    print()
     repo_root = os.getcwd()
     data_folder = os.path.abspath(os.path.join(repo_root, "..", "data"))
     if not os.path.exists(data_folder):
@@ -83,13 +119,16 @@ def main() -> None:
         print()
     if parser.download:
         print("downloading data...")
-        download_files(data_folder, [base_tree, 
-            sampling_locations, 
-            effective_airport_distances, 
-            effective_country_distances, 
-            geographic_country_distances, 
-            geographic_airport_distances], parser.no_op)
+        download_files(data_folder, [
+            base_tree,
+            sampling_locations,
+            effective_airport_distances,
+            effective_country_distances,
+            geographic_country_distances,
+            geographic_airport_distances
+            ], parser.no_op)
         print("done")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()
