@@ -59,7 +59,7 @@ def create_parser():
                    help="Only perform a dry-run of the action, don't actually do something",
                    action=argparse.BooleanOptionalAction)
 
-    return(p.parse_args())
+    return (p.parse_args())
 
 
 def ensure_file(description: str, url: str, path: str, dry_run: bool) -> None:
