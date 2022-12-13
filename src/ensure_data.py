@@ -14,9 +14,8 @@ base_tree = (
     "base tree"
 )
 sampling_locations = (
-    "https://github.com/hzi-bifo" +
-    "/Phylogeography_Paper/blob/8f5c2728808b351462106fdb0d5c6ac48380d374" +
-    "/Data/pH1N1/tipdata.txt",
+    "https://raw.githubusercontent.com/hzi-bifo/Phylogeography_Paper" +
+    "/8f5c2728808b351462106fdb0d5c6ac48380d374/Data/pH1N1/tipdata.txt",
     "sampling locations"
 )
 effective_country_distances = (
