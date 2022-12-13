@@ -117,7 +117,6 @@ class Node:
         if is_last:
             result = f"{prev_line}└─ {self.data}\n"
             if not self.is_leaf():
-                print("Not leaf")
                 for child in self.children[:-1]:
                     result += child._get_str_for_root(prev_line + "   ", False)
                 result += self.children[-1]._get_str_for_root(prev_line + "   ", True)

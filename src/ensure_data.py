@@ -8,9 +8,9 @@ import requests
 import argparse
 
 base_tree = (
-    "https://github.com/hzi-bifo/Phylogeography_Paper" +
-    "/blob/8f5c2728808b351462106fdb0d5c6ac48380d374/Data/pH1N1" +
-    "/pH1N1_until_20093004_cds_rooted.labeled.phy",
+    "https://raw.githubusercontent.com/hzi-bifo" +
+    "/Phylogeography_Paper/8f5c2728808b351462106fdb0d5c6ac48380d374" +
+    "/Data/pH1N1/pH1N1_until_20093004_cds_rooted.labeled.phy",
     "base tree"
 )
 sampling_locations = (
