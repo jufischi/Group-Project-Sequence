@@ -105,7 +105,7 @@ class Node:
 
     def _get_str_for_root(self, prev_line, is_last):
         """
-        Internal function for use in __str__(). SHOULD NOT be used by itself. Is used 
+        Internal function for use in __str__(). SHOULD NOT be used by itself. Is used
         to implement the recursion necessary for drawing the tree.
         Returns a formatted output String for printing the tree starting at the node.
 
@@ -129,7 +129,6 @@ class Node:
                     result += child._get_str_for_root(prev_line + "│  ", False)
                 result += self.children[-1]._get_str_for_root(prev_line + "│  ", True)
             return result
-
 
     def get_leaves(self):
         """
