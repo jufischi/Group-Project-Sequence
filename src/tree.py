@@ -101,10 +101,35 @@ class Node:
         String
             formatted output
         """
-        result = f"{self.data}:{self.edge_length_to_parent}\n[\n"
-        for child in self.children:
-            result += str(child)
-        return result + "]\n"
+        return self._get_str_for_root("", True)
+
+    def _get_str_for_root(self, prev_line, is_last):
+        """
+        Internal function for use in __str__(). SHOULD NOT be used by itself. Is used 
+        to implement the recursion necessary for drawing the tree.
+        Returns a formatted output String for printing the tree starting at the node.
+
+        Returns
+        -------
+        String
+            formatted output
+        """
+        if is_last:
+            result = f"{prev_line}└─ {self.data}\n"
+            if not self.is_leaf():
+                print("Not leaf")
+                for child in self.children[:-1]:
+                    result += child._get_str_for_root(prev_line + "   ", False)
+                result += self.children[-1]._get_str_for_root(prev_line + "   ", True)
+            return result
+        else:
+            result = f"{prev_line}├─ {self.data}\n"
+            if not self.is_leaf():
+                for child in self.children[:-1]:
+                    result += child._get_str_for_root(prev_line + "│  ", False)
+                result += self.children[-1]._get_str_for_root(prev_line + "│  ", True)
+            return result
+
 
     def get_leaves(self):
         """
