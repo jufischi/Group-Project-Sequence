@@ -156,7 +156,10 @@ class Node:
         Node
             the root node of the tree currently looked at
         """
-        pass
+        if self.is_root():
+            return self
+        parent = self.parent
+        return parent.get_root()
 
 
 class TestNode(unittest.TestCase):
@@ -213,6 +216,15 @@ class TestNode(unittest.TestCase):
         self.assertIn(3, leaves)
         self.assertIn(5, leaves)
         self.assertIn(6, leaves)
+
+    def test_get_root(self):
+        root = Node(1)
+        internal_node = Node(2)
+        leaf_node = Node(3)
+        internal_node.add_child_node(leaf_node)
+        root.add_child_node(internal_node)
+        determined_root = leaf_node.get_root()
+        self.assertEqual(root, determined_root)
 
 
 if __name__ == '__main__':
