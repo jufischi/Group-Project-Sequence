@@ -2,7 +2,7 @@ import numpy as np
 import unittest
 
 
-class Distance_matrix:
+class DistanceMatrix:
     """
     A class used to represent a distance matrix.
 
@@ -107,22 +107,22 @@ class Distance_matrix:
         return self.matrix.size
 
 
-class Test_distance_matrix(unittest.TestCase):
+class TestDistanceMatrix(unittest.TestCase):
     """
     A class to test the class Distance_matrix.
     """
 
     def test_get_distance(self):
-        m = Distance_matrix()
+        m = DistanceMatrix()
         m.set_distance_matrix(header=["a", "b"], matrix=np.array([[1, 2], [3, 4]]))
         self.assertEqual(m.get_distance(id_from="a", id_to="b"), 2)
 
     def test_get_size(self):
-        m = Distance_matrix(data=[["a", "b"], np.array([[1, 2], [3, 4]])])
+        m = DistanceMatrix(data=[["a", "b"], np.array([[1, 2], [3, 4]])])
         self.assertEqual(m.get_size(), 4)
 
     def test_get_header(self):
-        m = Distance_matrix()
+        m = DistanceMatrix()
         m.set_distance_matrix(header=["c", "d"], matrix=np.array([[1, 2], [3, 4]]))
         m.set_header(["a", "b"])
         self.assertEqual(m.get_header(), ["a", "b"])
