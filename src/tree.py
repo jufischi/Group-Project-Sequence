@@ -68,6 +68,8 @@ class Node:
         child : Node
             The node that is added to the node as a child.
         """
+        if child.parent is None:
+            child.parent = self
         self.children.append(child)
 
     def is_leaf(self):
@@ -145,6 +147,17 @@ class Node:
             result.extend(child.get_leaves())
         return result
 
+    def get_root(self):
+        """
+        Returns the root located above the node.
+
+        Returns
+        -------
+        Node
+            the root node of the tree currently looked at
+        """
+        pass
+
 
 class TestNode(unittest.TestCase):
     """
@@ -166,6 +179,15 @@ class TestNode(unittest.TestCase):
     def test_add_child(self):
         root = Node(1)
         root.add_child(2)
+        self.assertEqual(len(root.children), 1)
+        child = root.children[0]
+        self.assertTrue(child.is_leaf())
+        self.assertFalse(child.is_root())
+
+    def test_add_child_node(self):
+        root = Node(1)
+        child = Node(2)
+        root.add_child_node(child)
         self.assertEqual(len(root.children), 1)
         child = root.children[0]
         self.assertTrue(child.is_leaf())
