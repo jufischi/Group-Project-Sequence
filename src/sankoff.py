@@ -5,7 +5,38 @@ import numpy as np
 
 
 class Sankoff:
+    """
+    A class used to parse a Newick String and generate a tree from it.
+
+    Attributes
+    ----------
+    newick_string : String
+        The Newick String for the tree that Sankoff is performed on
+    distance_matrix : list / String
+        The distance matrix in form of a list / path to csv file containing the distance matrix
+    mapping : dictionary
+        The mapping of node labels to locations
+    delimiter : String
+        The delimiter used in the distance matrix
+
+    Methods
+    -------
+    perform_sankoff()
+        performs Sankoff algorithm on the given tree and distance matrix
+    """
     def __init__(self, newick_string, distance_matrix, mapping, delimiter=','):
+        """
+        Parameters
+        ----------
+        newick_string : String
+            The Newick String for the tree that Sankoff is performed on
+        distance_matrix : list / String
+            The distance matrix in form of a list / path to csv file containing the distance matrix
+        mapping : dictionary
+            The mapping of node labels to locations
+        delimiter : String
+            The delimiter used in the distance matrix
+        """
         parser = NewickParser(newick_string)
         parser.parse()
         self.tree = parser.root
@@ -13,15 +44,27 @@ class Sankoff:
         self.distance_matrix = DistanceMatrix(distance_matrix, delimiter)
         self.mapping = mapping
 
-        self.set_tree_labels(self.tree)
+        self._set_tree_labels(self.tree)
 
-    def do_sankoff(self):
-        self.forward_pass(self.tree)
-        self.backward_pass(self.tree)
+    def perform_sankoff(self):
+        """
+        Performs the Sankoff algorithm on the given tree and distance matrix by calling the functions _forward_pass(tree)
+        and _backward_pass(tree). Does not require any input.
+        """
+        self._forward_pass(self.tree)
+        self._backward_pass(self.tree)
 
-    def set_tree_labels(self, node):
+    def _set_tree_labels(self, node):
+        """
+        Recursive function to set all tree labels as an object TreeLabel.
+
+        Parameters
+        ----------
+        node : Node
+            Currently worked on node
+        """
         for child in node.children:
-            self.set_tree_labels(child)
+            self._set_tree_labels(child)
         if node.is_leaf():
             label = self.mapping[node.data]
             dictionary = dict([(x, 0) if x == label else (x, float('inf')) for x in self.distance_matrix.header])
@@ -29,10 +72,24 @@ class Sankoff:
         else:
             node.data = TreeLabel(None, node.data, {})
 
-    def forward_pass(self, node):
+    def _forward_pass(self, node):
+        """
+        Function to perform the forward pass of the Sankoff algorithm. Starting from the leaves, this function
+        calculates the cost at each node for any given label.
+
+        Parameters
+        ----------
+        node : Node
+            Currently worked on node
+
+        Returns
+        -------
+        dict
+            with key = label and value = cost for the given node
+        """
         list_of_dict = []
         for child in node.children:
-            list_of_dict.append(self.forward_pass(child))
+            list_of_dict.append(self._forward_pass(child))
         if not node.is_leaf():
             for label in self.distance_matrix.header:
                 cost = 0
@@ -42,12 +99,36 @@ class Sankoff:
                 node.data.dictionary[label] = cost
         return node.data.dictionary
 
-    def backward_pass(self, node):
-        node.data.label, _ = self.get_minimal_cost(node)
-        for child in node.children:
-            self.backward_pass(child)
+    def _backward_pass(self, node):
+        """
+        Function to perform the backward pass of the Sankoff algorithm. Starting from the root, this function assigns
+        the appropriate label to the node.
 
-    def get_minimal_cost(self, node):
+        Parameters
+        ----------
+        node : Node
+            Currently worked on node
+        """
+        node.data.label, _ = self._get_minimal_cost(node)
+        for child in node.children:
+            self._backward_pass(child)
+
+    def _get_minimal_cost(self, node):
+        """
+        Returns the minimal cost at a given node and the corresponding label.
+
+        Parameters
+        ----------
+        node : Node
+            Currently worked on node
+
+        Returns
+        -------
+        key : String
+            label for which the cost is minimal
+        min_cost : int
+            minimal cost
+        """
         if node.is_root():
             min_cost = min(node.data.dictionary.values())
             for key, value in node.data.dictionary.items():
@@ -65,6 +146,18 @@ class Sankoff:
 
 
 class TreeLabel:
+    """
+    A class to store the information about a node in the tree
+
+    Attributes
+    ----------
+    label : String
+        information about the location (airport or country)
+    info : String
+        additional information about the node (e.g. sequence ID)
+    dictionary : dict
+        stores cost at each node and node label for computation of Sankoff
+    """
     def __init__(self, label, info, dictionary):
         self.label = label
         self.info = info
@@ -72,6 +165,9 @@ class TreeLabel:
 
 
 class TestSankoff(unittest.TestCase):
+    """
+    A class to test the class Sankoff.
+    """
     def setUp(self):
         self.newick = "(((A,C),G),(C,G));"
         self.distance_matrix = [["A", "C", "G", "T"],
@@ -80,7 +176,7 @@ class TestSankoff(unittest.TestCase):
 
     def test_forward_pass(self):
         sankoff = Sankoff(self.newick, self.distance_matrix, self.mapping)
-        sankoff.forward_pass(sankoff.tree)
+        sankoff._forward_pass(sankoff.tree)
         self.assertEqual(round(sankoff.tree.data.dictionary["A"], 0), 6)
         self.assertEqual(round(sankoff.tree.data.dictionary["C"], 0), 6)
         self.assertEqual(round(sankoff.tree.data.dictionary["G"], 0), 5)
@@ -88,7 +184,7 @@ class TestSankoff(unittest.TestCase):
 
     def test_backward_pass(self):
         sankoff = Sankoff(self.newick, self.distance_matrix, self.mapping)
-        sankoff.do_sankoff()
+        sankoff.perform_sankoff()
         self.assertEqual(sankoff.tree.data.label, "G")
         child_labels = [child.data.label for child in sankoff.tree.children]
         self.assertEqual(child_labels, ["G", "G"])
@@ -98,7 +194,7 @@ class TestSankoff(unittest.TestCase):
         distance_matrix = [["A", "B", "C", "D"], np.array([[0, 2, 3, 1], [1, 0, 3, 2], [2, 4, 0, 2], [2, 1, 1, 0]])]
         mapping = {"A": "A", "B": "B", "C": "C", "D": "D"}
         sankoff = Sankoff(newick, distance_matrix, mapping)
-        sankoff.do_sankoff()
+        sankoff.perform_sankoff()
         self.assertEqual(sankoff.tree.data.label, "A")
         self.assertEqual(round(sankoff.tree.data.dictionary["A"], 0), 3)
         self.assertEqual(round(sankoff.tree.data.dictionary["B"], 0), 4)
