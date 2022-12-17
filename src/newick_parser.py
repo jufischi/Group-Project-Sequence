@@ -5,20 +5,20 @@ import unittest
 
 class NewickParser:
     """
-        A class used to parse a Newick String and generate a tree from it.
+    A class used to parse a Newick String and generate a tree from it.
 
-        Attributes
-        ----------
-        input : String
-            The Newick String, which is to be parsed
-        root : Node
-            The root node of the parsed tree
+    Attributes
+    ----------
+    input : String
+        The Newick String, which is to be parsed
+    root : Node
+        The root node of the parsed tree
 
-        Methods
-        -------
-        parse()
-            parses a Newick string
-        """
+    Methods
+    -------
+    parse()
+        parses a Newick string
+    """
     def __init__(self, input):
         """
         Parameters
