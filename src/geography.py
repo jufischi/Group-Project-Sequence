@@ -2,6 +2,7 @@ import geopandas
 import pandas as pd
 import airportsdata
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 class xy:
     def __init__(self, x=None, y=None):
@@ -52,18 +53,20 @@ def plot_locs(gdf):
     # plot countries
     world[world.name == 'Brazil'].plot(ax=ax, zorder=1, color="lightgreen", edgecolor="white", linewidth=0.5)
     # plot lines
-    plot_lines(["LAX", "MEX"], ["JFK", "JFK"])
+    plot_lines(["LAX", "MEX", "MUC"], ["JFK", "JFK", "JFK"], ax)
     # plot via matplotlib
     plt.plot(xy().get_from_airport("THE").x, xy().get_from_airport("THE").y, marker='o', color='forestgreen', markersize=5, zorder=2)
 
 
-def plot_lines(From, To):
+def plot_lines(From, To,ax):
     assert len(From) == len(To)
 
     for f, t in zip(From, To):
         xy_f = xy().get_from_airport(f)
         xy_t = xy().get_from_airport(t)
-        plt.plot([xy_f.x, xy_t.x], [xy_f.y, xy_t.y], ":", color="red")
+        # plt.plot([xy_f.x, xy_t.x], [xy_f.y, xy_t.y], ":", color="red")
+        arrow = mpatches.FancyArrowPatch((xy_f.x, xy_f.y), (xy_t.x, xy_t.y), mutation_scale=15, arrowstyle='->')
+        ax.add_patch(arrow)
 
 
 if __name__ == "__main__":
