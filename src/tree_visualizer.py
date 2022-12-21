@@ -87,8 +87,10 @@ class Tree_Visualizer:
         connections = Tree_Visualizer.collect_connections(root)
         for src, dest in connections:
             if (
-                world[world.iso_a3 == src.country].continent.isin(continent_list).all() and
-                world[world.iso_a3 == dest.country].continent.isin(continent_list).all()
+                not continent_list or (
+                    world[world.iso_a3 == src.country].continent.isin(continent_list).all() and
+                    world[world.iso_a3 == dest.country].continent.isin(continent_list).all()
+                )
             ):
                 arrow = patches.FancyArrowPatch((src.x, src.y), (dest.x, dest.y), mutation_scale=15, arrowstyle="->")
                 ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o")
@@ -113,12 +115,12 @@ class Tree_Visualizer:
         A list of airport tuples
         """
         result = []
-        current_airport = Airport(subtree_rooted_at.data)
+        current_airport = Airport(str(subtree_rooted_at.data))
         if subtree_rooted_at.is_leaf():
             return []
 
         for child in subtree_rooted_at.children:
-            result.append((current_airport, Airport(child.data)))
+            result.append((current_airport, Airport(str(child.data))))
             result.extend(Tree_Visualizer.collect_connections(child))
 
         return result
@@ -135,8 +137,5 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(root, ax, ["Europe"])
+        Tree_Visualizer.draw_tree(root, ax)
         plt.show()
-
-
-TestVisualizer.visualize()
