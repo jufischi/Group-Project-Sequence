@@ -163,6 +163,9 @@ class TreeLabel:
         self.info = info
         self.dictionary = dictionary
 
+    def __str__(self):
+        return str(self.label)
+
 
 class TestSankoff(unittest.TestCase):
     """
