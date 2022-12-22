@@ -2,7 +2,8 @@ from typing import List, Tuple
 import geopandas
 import airportsdata
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
+from matplotlib.collections import LineCollection
+import numpy as np
 from tree import Node
 import pycountry
 
@@ -85,6 +86,8 @@ class Tree_Visualizer:
                 world[world.continent == continent].plot(ax=ax, zorder=1)
 
         connections = Tree_Visualizer.collect_connections(root)
+        world[world.iso_a3 == connections[0][0].country].plot(ax=ax, color="red", alpha=0.5)
+
         for src, dest in connections:
             if (
                 not continent_list or (
@@ -92,9 +95,10 @@ class Tree_Visualizer:
                     world[world.iso_a3 == dest.country].continent.isin(continent_list).all()
                 )
             ):
-                arrow = patches.FancyArrowPatch((src.x, src.y), (dest.x, dest.y), mutation_scale=15, arrowstyle="->")
-                ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o")
-                ax.add_patch(arrow)
+                ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
+                ax.add_collection(Tree_Visualizer.create_LineCollection(src, dest))
+
+        ax.plot(connections[0][0].x, connections[0][0].y, color="darkred", marker="o",  markersize=5, zorder=3)
 
     def collect_connections(subtree_rooted_at: Node) -> List[Tuple[Airport, Airport]]:
         """
@@ -125,6 +129,31 @@ class Tree_Visualizer:
 
         return result
 
+    def create_LineCollection(src: Airport, dest: Airport, n: int = 100) -> LineCollection:
+        """
+
+        Parameters
+        ----------
+        subtree_rooted_at: Node
+            The root of the subtree to traverse
+
+        Returns
+        ----------
+        matplotlib object LineCollection
+        """
+        # spacing for continuous line
+        x = np.linspace(src.x, dest.x, n)
+        y = np.linspace(src.y, dest.y, n)
+        # create segments
+        points = np.array([x, y]).T.reshape(-1, 1, 2)
+        segments = [s for i, s in enumerate(np.concatenate([points[:-1], points[1:]], axis=1)) if i % 5 != 0]
+        # normalize set start of color scheme
+        norm = plt.Normalize(-n / 2, n)
+        lc = LineCollection(segments, cmap='Reds', linewidths=1, norm=norm, zorder=2)
+        # set which colors should be iterated
+        lc.set_array(np.arange(n))
+        return lc
+
 
 class TestVisualizer:
     def visualize() -> None:
@@ -137,5 +166,7 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(root, ax)
+        Tree_Visualizer.draw_tree(root, ax, [])
         plt.show()
+
+TestVisualizer.visualize()
