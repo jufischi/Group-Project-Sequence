@@ -131,11 +131,16 @@ class Tree_Visualizer:
 
     def create_LineCollection(src: Airport, dest: Airport, n: int = 100) -> LineCollection:
         """
+        Creates a LineCollection object, which represents a directed dotted line between two Airports
 
         Parameters
         ----------
-        subtree_rooted_at: Node
-            The root of the subtree to traverse
+        src: Airport
+            source Airport
+        dest: Airport
+            destination Airport
+        n: int
+            optional, number of drawn points
 
         Returns
         ----------
@@ -168,5 +173,3 @@ class TestVisualizer:
         fig, ax = plt.subplots()
         Tree_Visualizer.draw_tree(root, ax, [])
         plt.show()
-
-TestVisualizer.visualize()
