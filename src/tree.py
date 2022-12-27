@@ -94,6 +94,37 @@ class Node:
         """
         return self.parent is None
 
+    def get_newick(self, with_edge_lengths=True, with_semicolon=True):
+        """
+        Returns a Newick string for the tree below the given node (including it)
+
+        Parameters
+        ----------
+        with_edge_lengths : bool
+            Whether the Newick string should contain edge lengths
+        with_semicolon : bool
+            Whether a semicolon is put at the end of the Newick string
+
+        Returns
+        -------
+        String
+            Newick string
+        """
+        result = ""
+        if not self.is_leaf():
+            result += "("
+            for child in self.children[:-1]:
+                result += child.get_newick(with_edge_lengths, with_semicolon=False)
+                result += ", "
+            result += self.children[-1].get_newick(with_edge_lengths, with_semicolon=False)
+            result += ")"
+        result += str(self.data)
+        if with_edge_lengths and self.edge_length_to_parent is not None:
+            result += f":{self.edge_length_to_parent}"
+        if with_semicolon:
+            result += ";"
+        return result
+
     def __str__(self):
         """
         Returns a formatted output String for printing the tree starting at the node.
