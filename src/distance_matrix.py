@@ -79,6 +79,10 @@ class DistanceMatrix:
 
         self.header = header
         self.matrix = matrix
+        header_keys = {}
+        for i in range(len(self.header)):
+            header_keys[self.header[i]] = i
+        self.header_keys = header_keys
 
     def get_distance(self, id_from, id_to):
         """
@@ -88,9 +92,7 @@ class DistanceMatrix:
         :param id_to: str, column name
         :return: float, distance
         """
-        assert id_from in self.header and id_to in self.header
-
-        return self.matrix[self.header.index(id_from), self.header.index(id_to)]
+        return self.matrix[self.header_keys[id_from], self.header_keys[id_to]]
 
     def get_header(self):
         """

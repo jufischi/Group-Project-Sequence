@@ -16,7 +16,7 @@ class TipMapper:
 
 
 def main() -> None:
-    cwd = ".."
+    cwd = "/home/gnampfelix/repositories/github.com/jufischi/Group-Project-Sequence"
     with open(os.path.join(cwd, "data", "pH1N1_until_20093004_cds_rooted.labeled.phy"), "r") as file:
         newick_string = file.readlines()[0]
 
