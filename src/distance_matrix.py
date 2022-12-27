@@ -51,8 +51,20 @@ class DistanceMatrix:
         :param file: str, file path
         :param delimiter: str, delimiter (optional)
         """
-        header = np.genfromtxt(file, dtype=str, delimiter=delimiter, max_rows=1, autostrip=True)[1:]
-        matrix = np.genfromtxt(file, dtype=float, delimiter=delimiter, skip_header=1, usecols=np.arange(1, len(header) + 1))
+        header = [x.replace("\"", "") for x in np.genfromtxt(
+            file,
+            dtype=str,
+            delimiter=delimiter,
+            max_rows=1,
+            autostrip=True
+            )[1:].tolist()]
+        matrix = np.genfromtxt(
+            file,
+            dtype=float,
+            delimiter=delimiter,
+            skip_header=1,
+            usecols=np.arange(1, len(header) + 1)
+            )
 
         self.set_distance_matrix(header, matrix)
 

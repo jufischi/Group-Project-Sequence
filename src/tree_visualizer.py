@@ -7,6 +7,16 @@ import numpy as np
 from tree import Node
 import pycountry
 
+fallback_airports = {
+    "US": "LAX",
+    "GB": "LHR",
+    "FR": "CDG",
+    "DE": "MUC",
+    "MX": "MEX",
+    "HK": "HKG",
+    "CA": "YVR"
+}
+
 
 class Airport:
     """
@@ -35,6 +45,11 @@ class Airport:
         name: str
             The name of the airport in its IATA representation
         """
+        if len(name) == 2:
+            if name in fallback_airports:
+                name = fallback_airports[name]
+            else:
+                name = "SYD"
         self.x = Airport.airport_locations.get(name)["lon"]
         self.y = Airport.airport_locations.get(name)["lat"]
         self.name = name
