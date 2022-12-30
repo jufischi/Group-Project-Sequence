@@ -75,7 +75,7 @@ class Tree_Visualizer:
         Traverses the tree recursively starting on the given node and returns
         all edges of that tree as a list of tuples of two airports.
     """
-    def draw_tree(root: Node, ax: plt.Axes, continent_list: List[str] = []) -> None:
+    def draw_tree(root: Node, ax: plt.Axes, continent_list: List[str] = [], every: bool = True) -> None:
         """
         Draws the tree represented by its root node on the given
         mathplotlib.pyplot Axis. This will produce a vector based world map with
@@ -92,30 +92,35 @@ class Tree_Visualizer:
         continent_list: List[str]
             Optional list of continents to display, e.g. "South America". If
             this list is not set or empty, the whole world is displayed.
+        every: bool
+            Optional boolean to specify if every airport or only its country
+            should be visualized
         """
         world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
-        if not continent_list:
-            world.plot(ax=ax, zorder=1)
-        else:
-            for continent in continent_list:
-                world[world.continent == continent].plot(ax=ax, zorder=1, color="seagreen",
-                                                         edgecolor="gainsboro", linewidth=0.2)
+        print(type(world))
 
         connections = Tree_Visualizer.collect_connections(root)
         world[world.iso_a3 == connections[0][0].country].plot(ax=ax, color="seagreen", hatch="///",
-                                                              edgecolor="maroon", linewidth=1)
+                                                              edgecolor="maroon", linewidth=1, zorder=1)
 
-        for src, dest in connections:
-            if (
-                not continent_list or (
-                    world[world.iso_a3 == src.country].continent.isin(continent_list).all() and
-                    world[world.iso_a3 == dest.country].continent.isin(continent_list).all()
-                )
-            ):
-                ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
-                ax.add_collection(Tree_Visualizer.create_LineCollection(src, dest))
+        if not continent_list:
+            world[world.name!="Antarctica"].to_crs(4326).plot(ax=ax, zorder=0, color="seagreen", edgecolor="gainsboro", linewidth=0.2)
+        else:
+            for continent in continent_list:
+                world[(world.continent == continent) & (world.name!="Antarctica")].plot(ax=ax, zorder=1,
+                                                                                        color="seagreen",
+                                                                                        edgecolor="gainsboro",
+                                                                                        linewidth=0.2)
 
-        ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o",  markersize=5, zorder=3)
+        if every:
+            Tree_Visualizer.plot_connections(connections, ax, world, continent_list)
+        else:
+            for src, dest in connections:
+                src.x = world[world.iso_a3 == src.country].centroid.x
+                src.y = world[world.iso_a3 == src.country].centroid.y
+                dest.x = world[world.iso_a3 == dest.country].centroid.x
+                dest.y = world[world.iso_a3 == dest.country].centroid.y
+            Tree_Visualizer.plot_country_connections(connections, ax, world, continent_list)
 
     def collect_connections(subtree_rooted_at: Node) -> List[Tuple[Airport, Airport]]:
         """
@@ -176,6 +181,83 @@ class Tree_Visualizer:
         lc.set_array(np.arange(n))
         return lc
 
+    def plot_country_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
+                                 world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = []) -> None:
+        """
+        Draws connections between Airports. The location of each airport is centered in the corresponding country.
+        All connections within one country are therefore not visible.
+
+        As an example, the airport MUC (Munich) will be displayed in the center of Germany.
+
+        Parameters
+        ----------
+        connections: List[Tuple[Airport, Airport]]
+            A connection from one Airport to its destination Airport
+        ax: pyplot.Axes
+            The subfigure in which the tree should be displayed
+        world: geopandas.geodataframe.GeoDataFrame
+            GeoDataFrame containing the information of a world map
+        continents: List[str] = []
+            Optional list of continents to display, e.g. "South America". If
+            this list is not set or empty, the whole world is displayed.
+
+        Returns
+        ----------
+        matplotlib object LineCollection
+        """
+        countries = set()
+        for src, dest in connections:
+            if (
+                    not continents or (
+                    world[world.iso_a3 == src.country].continent.isin(continents).all() and
+                    world[world.iso_a3 == dest.country].continent.isin(continents).all()
+            )
+            ):
+                if (src.country not in countries or dest.country not in countries) and src.country != dest.country:
+                    countries.add(src.country)
+                    countries.add(dest.country)
+                    ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
+                    ax.add_collection(Tree_Visualizer.create_LineCollection(src, dest))
+                else:
+                    continue
+
+    def plot_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
+                                 world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = []) -> None:
+        """
+        Draws connections between Airports. The location of each airport is centered in the corresponding country.
+        All connections within one country are therefore not visible.
+
+        As an example, the airport MUC (Munich) will be displayed in the center of Germany.
+
+        Parameters
+        ----------
+        connections: List[Tuple[Airport, Airport]]
+            A connection from one Airport to its destination Airport
+        ax: pyplot.Axes
+            The subfigure in which the tree should be displayed
+        world: geopandas.geodataframe.GeoDataFrame
+            GeoDataFrame containing the information of a world map
+        continents: List[str] = []
+            Optional list of continents to display, e.g. "South America". If
+            this list is not set or empty, the whole world is displayed.
+
+        Returns
+        ----------
+        matplotlib object LineCollection
+        """
+        for src, dest in connections:
+            if (
+                    not continents or (
+                    world[world.iso_a3 == src.country].continent.isin(continents).all() and
+                    world[world.iso_a3 == dest.country].continent.isin(continents).all()
+            )
+            ):
+                ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
+                ax.add_collection(Tree_Visualizer.create_LineCollection(src, dest))
+
+        ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o", markersize=5, zorder=3)
+
+
 
 class TestVisualizer:
     def visualize() -> None:
@@ -188,6 +270,5 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(root, ax, ["North America", "Europe"])
+        Tree_Visualizer.draw_tree(root, ax, [], True)
         plt.show()
-
