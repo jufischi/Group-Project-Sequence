@@ -75,7 +75,8 @@ class Tree_Visualizer:
         Traverses the tree recursively starting on the given node and returns
         all edges of that tree as a list of tuples of two airports.
     """
-    def draw_tree(root: Node, ax: plt.Axes, continent_list: List[str] = [], every: bool = True) -> None:
+    def draw_tree(root: Node, ax: plt.Axes, continent_list: List[str] = [], every: bool = True,
+                  num_children: float = np.inf, num_parents: int = 0) -> None:
         """
         Draws the tree represented by its root node on the given
         mathplotlib.pyplot Axis. This will produce a vector based world map with
@@ -95,11 +96,14 @@ class Tree_Visualizer:
         every: bool
             Optional boolean to specify if every airport or only its country
             should be visualized
+        num_children: float
+            Optional float value defining how many children should be drawn
+        num_parents: int
+            Optional int value defining how many parents should be drawn
         """
         world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
-        print(type(world))
 
-        connections = Tree_Visualizer.collect_connections(root)
+        connections = Tree_Visualizer.collect_connections(root, num_children, num_parents)
         world[world.iso_a3 == connections[0][0].country].plot(ax=ax, color="seagreen", hatch="///",
                                                               edgecolor="maroon", linewidth=1, zorder=1)
 
@@ -122,7 +126,8 @@ class Tree_Visualizer:
                 dest.y = world[world.iso_a3 == dest.country].centroid.y
             Tree_Visualizer.plot_country_connections(connections, ax, world, continent_list)
 
-    def collect_connections(subtree_rooted_at: Node) -> List[Tuple[Airport, Airport]]:
+    def collect_connections(subtree_rooted_at: Node, num_children: float = np.inf, num_parents: int = 0) \
+            -> List[Tuple[Airport, Airport]]:
         """
         Traverses the tree recursively starting on the given node and returns
         all edges of that tree as a list of tuples of two airports.
@@ -135,6 +140,10 @@ class Tree_Visualizer:
         ----------
         subtree_rooted_at: Node
             The root of the subtree to traverse
+        num_children: float
+            Optional float value defining how many children should be visited
+        num_parents: int
+            Optional int value defining how many parents should be visited
 
         Returns
         ----------
@@ -145,9 +154,16 @@ class Tree_Visualizer:
         if subtree_rooted_at.is_leaf():
             return []
 
-        for child in subtree_rooted_at.children:
-            result.append((current_airport, Airport(str(child.data))))
-            result.extend(Tree_Visualizer.collect_connections(child))
+        if num_children:
+            for child in subtree_rooted_at.children:
+                result.append((current_airport, Airport(str(child.data))))
+                result.extend(Tree_Visualizer.collect_connections(child, num_children=num_children-1,
+                                                                  num_parents=0))
+
+        if num_parents and not subtree_rooted_at.is_root():
+            result.append((Airport(str(subtree_rooted_at.parent.data)), current_airport))
+            result.extend(Tree_Visualizer.collect_connections(subtree_rooted_at, num_children=0,
+                                                              num_parents=num_parents-1))
 
         return result
 
@@ -270,5 +286,5 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(root, ax, [], True)
+        Tree_Visualizer.draw_tree(root.children[1], ax, [], True, num_children=10, num_parents=10)
         plt.show()
