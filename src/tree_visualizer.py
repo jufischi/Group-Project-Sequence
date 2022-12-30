@@ -98,10 +98,12 @@ class Tree_Visualizer:
             world.plot(ax=ax, zorder=1)
         else:
             for continent in continent_list:
-                world[world.continent == continent].plot(ax=ax, zorder=1)
+                world[world.continent == continent].plot(ax=ax, zorder=1, color="seagreen",
+                                                         edgecolor="gainsboro", linewidth=0.2)
 
         connections = Tree_Visualizer.collect_connections(root)
-        world[world.iso_a3 == connections[0][0].country].plot(ax=ax, color="red", alpha=0.5)
+        world[world.iso_a3 == connections[0][0].country].plot(ax=ax, color="seagreen", hatch="///",
+                                                              edgecolor="maroon", linewidth=1)
 
         for src, dest in connections:
             if (
@@ -113,7 +115,7 @@ class Tree_Visualizer:
                 ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
                 ax.add_collection(Tree_Visualizer.create_LineCollection(src, dest))
 
-        ax.plot(connections[0][0].x, connections[0][0].y, color="darkred", marker="o",  markersize=5, zorder=3)
+        ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o",  markersize=5, zorder=3)
 
     def collect_connections(subtree_rooted_at: Node) -> List[Tuple[Airport, Airport]]:
         """
@@ -186,5 +188,6 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(root, ax, [])
+        Tree_Visualizer.draw_tree(root, ax, ["North America", "Europe"])
         plt.show()
+
