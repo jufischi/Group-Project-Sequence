@@ -84,6 +84,7 @@ class DistanceMatrix:
             header_keys[self.header[i]] = i
         self.header_keys = header_keys
 
+    @profile
     def get_distance(self, id_from, id_to):
         """
         returns distance between two elements in header

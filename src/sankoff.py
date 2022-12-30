@@ -72,6 +72,7 @@ class Sankoff:
         else:
             node.data = TreeLabel(None, node.data, {})
 
+    @profile
     def _forward_pass(self, node):
         """
         Function to perform the forward pass of the Sankoff algorithm. Starting from the leaves, this function
@@ -99,6 +100,7 @@ class Sankoff:
                 node.data.dictionary[label] = cost
         return node.data.dictionary
 
+    @profile
     def _backward_pass(self, node):
         """
         Function to perform the backward pass of the Sankoff algorithm. Starting from the root, this function assigns
@@ -113,6 +115,7 @@ class Sankoff:
         for child in node.children:
             self._backward_pass(child)
 
+    @profile
     def _get_minimal_cost(self, node):
         """
         Returns the minimal cost at a given node and the corresponding label.
