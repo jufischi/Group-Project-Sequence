@@ -296,7 +296,7 @@ class Tree_Visualizer:
 
 
 class TestVisualizer:
-    def visualize() -> None:
+    def visualize(self) -> None:
         root = Node("STR")
         root.add_child("MUC")
         root.add_child("BER")
