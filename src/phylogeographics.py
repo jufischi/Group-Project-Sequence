@@ -26,7 +26,7 @@ def main() -> None:
 
         fig, ax = plt.subplots()
         Tree_Visualizer.draw_tree(sankoff.tree, ax, [])
-        plt.show()
+       # plt.show()
 
 
 if __name__ == '__main__':

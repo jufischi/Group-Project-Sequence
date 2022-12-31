@@ -90,12 +90,16 @@ class Sankoff:
         """
         if not node.is_leaf():
             array_of_children = np.stack([self._forward_pass(child) for child in node.children])
-            for from_index in range(len(self.distance_matrix.header)):
-                cost = 0
-                for child in array_of_children:                    
-                    _calculate_cost = lambda to_index: child[to_index] + self.distance_matrix.get_distance_from_index(from_index, to_index)
-                    cost += np.min(_calculate_cost(self.header_array))
-                node.data.array = np.append(node.data.array, cost)
+            
+            def calculate_cost_for_each_state(from_index):
+                def calculate_cost_for_children(array_of_children):
+                    def calculate_cost(to_index): 
+                        return array_of_children[:,to_index] + self.distance_matrix.matrix[from_index, to_index]
+                    costs = calculate_cost(self.header_array)
+                    return np.min(costs, axis=1)
+                costs = calculate_cost_for_children(array_of_children)
+                return np.sum(costs)
+            node.data.array = np.array([calculate_cost_for_each_state(state) for state in self.header_array])
         return node.data.array    
 
     # @profile
