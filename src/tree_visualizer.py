@@ -45,10 +45,11 @@ class Airport:
         name: str
             The name of the airport in its IATA representation
         """
-        if len(name) == 2:
+        if len(name) == 2 or Airport.airport_locations.get(name) is None:
             if name in fallback_airports:
                 name = fallback_airports[name]
             else:
+                print(f"location {name} not found")
                 name = "SYD"
         self.x = Airport.airport_locations.get(name)["lon"]
         self.y = Airport.airport_locations.get(name)["lat"]
@@ -190,4 +191,3 @@ class TestVisualizer:
         fig, ax = plt.subplots()
         Tree_Visualizer.draw_tree(root, ax, ["North America", "Europe"])
         plt.show()
-

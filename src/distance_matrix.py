@@ -82,7 +82,6 @@ class DistanceMatrix:
             header_keys[self.header[i]] = i
         self.header_keys = header_keys
 
-    # @profile
     def get_distance(self, header_from, header_to):
         """
         returns distance between two elements in header
@@ -93,7 +92,6 @@ class DistanceMatrix:
         """
         return self.matrix[self.header_keys[header_from], self.header_keys[header_to]]
 
-    # @profile
     def get_distance_from_index(self, id_from, id_to):
         """
         returns distance between two elements in header
