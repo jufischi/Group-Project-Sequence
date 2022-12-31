@@ -8,14 +8,37 @@ from tree import Node
 import pycountry
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-fallback_airports = {
+country_airports = {
     "US": "LAX",
     "GB": "LHR",
     "FR": "CDG",
     "DE": "MUC",
     "MX": "MEX",
     "HK": "HKG",
-    "CA": "YVR"
+    "CA": "YVR",
+    "NZ": "AKL",
+    "BR": "GIG",
+    "CR": "SJO",
+    "SV": "SAL",
+    "DO": "JBQ",
+    "KR": "ICN",
+    "SE": "ARN",
+    "ES": "MAD"
+}
+
+lam_airport = {
+    "icao": "KLAM",
+    "iata": "LAM",
+    "name": "Los Alamos Airport",
+    "city": "Los Alamos",
+    "subd": "New Mexico",
+    "country": "US",
+    "elevation": 7170.9,
+    "lat": 35.8796861111111,
+    "lon": -106.268686111111,
+    "tz": "America/Denver",
+    "tz": "America/Denver",
+    "lid": "LAM"
 }
 
 
@@ -38,6 +61,7 @@ class Airport:
     -------
     """
     airport_locations = airportsdata.load("IATA")
+    airport_locations["LAM"] = lam_airport
 
     def __init__(self, name: str) -> None:
         """
@@ -46,10 +70,11 @@ class Airport:
         name: str
             The name of the airport in its IATA representation
         """
-        if len(name) == 2:
-            if name in fallback_airports:
-                name = fallback_airports[name]
+        if len(name) == 2 or Airport.airport_locations.get(name) is None:
+            if name in country_airports:
+                name = country_airports[name]
             else:
+                print(f"location {name} not found")
                 name = "SYD"
         self.x = Airport.airport_locations.get(name)["lon"]
         self.y = Airport.airport_locations.get(name)["lat"]
