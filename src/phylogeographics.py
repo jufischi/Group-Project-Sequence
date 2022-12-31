@@ -1,4 +1,4 @@
-from tree_visualizer import Tree_Visualizer
+from tree_visualizer import TreeVisualizer
 from matplotlib import pyplot as plt
 from sankoff import Sankoff
 # import airportsdata
@@ -25,7 +25,7 @@ def main() -> None:
         sankoff.perform_sankoff()
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(sankoff.tree, ax, [])
+        TreeVisualizer.draw_tree(sankoff.tree, ax, [])
         plt.show()
 
 

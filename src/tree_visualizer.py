@@ -58,7 +58,7 @@ class Airport:
         self.country = pycountry.countries.get(alpha_2=country_name).alpha_3
 
 
-class Tree_Visualizer:
+class TreeVisualizer:
     """
     A class used to visualize a tree that has airport IATA names as
     the labels of its nodes such that each node can be drawn on a world map.
@@ -70,9 +70,9 @@ class Tree_Visualizer:
     -------
     draw_tree(root: Node, ax: plt.Axes, continent_list: List[str] = [])
         Draws the tree represented by its root node on the given
-        mathplotlib.pyplot Axis. This will produce a vector based world map with
+        matplotlib.pyplot Axis. This will produce a vector based world map with
         the tree plotted onto it.
-    collect_conections(subtree_rooted_at Node)
+    collect_connections(subtree_rooted_at Node)
         Traverses the tree recursively starting on the given node and returns
         all edges of that tree as a list of tuples of two airports.
     """
@@ -80,7 +80,7 @@ class Tree_Visualizer:
                   num_children: float = np.inf, num_parents: int = 0, n: int = 100) -> None:
         """
         Draws the tree represented by its root node on the given
-        mathplotlib.pyplot Axis. This will produce a vector based world map with
+        matplotlib.pyplot Axis. This will produce a vector based world map with
         the tree plotted onto it. This method does not call the ax.show()
         method, so that the caller have the opportunity to manipulate the results
         as they like.
@@ -108,29 +108,29 @@ class Tree_Visualizer:
         """
         world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
 
-        connections = Tree_Visualizer.collect_connections(root, num_children, num_parents)
+        connections = TreeVisualizer.collect_connections(root, num_children, num_parents)
         world[world.iso_a3 == connections[0][0].country].plot(ax=ax, color="seagreen", hatch="///",
                                                               edgecolor="maroon", linewidth=1, zorder=1)
 
         if not continent_list:
-            world[world.name!="Antarctica"].to_crs(4326).plot(ax=ax, zorder=0, color="seagreen", edgecolor="gainsboro",
-                                                              linewidth=0.2)
+            world[world.name != "Antarctica"].to_crs(4326).plot(ax=ax, zorder=0, color="seagreen",
+                                                                edgecolor="gainsboro", linewidth=0.2)
         else:
             for continent in continent_list:
-                world[(world.continent == continent) & (world.name!="Antarctica")].plot(ax=ax, zorder=1,
-                                                                                        color="seagreen",
-                                                                                        edgecolor="gainsboro",
-                                                                                        linewidth=0.2)
+                world[(world.continent == continent) & (world.name != "Antarctica")].plot(ax=ax, zorder=1,
+                                                                                          color="seagreen",
+                                                                                          edgecolor="gainsboro",
+                                                                                          linewidth=0.2)
 
         if every:
-            lc = Tree_Visualizer.plot_connections(connections, ax, world, continent_list)
+            lc = TreeVisualizer.plot_connections(connections, ax, world, continent_list)
         else:
             for src, dest in connections:
                 src.x = world[world.iso_a3 == src.country].centroid.x
                 src.y = world[world.iso_a3 == src.country].centroid.y
                 dest.x = world[world.iso_a3 == dest.country].centroid.x
                 dest.y = world[world.iso_a3 == dest.country].centroid.y
-            lc = Tree_Visualizer.plot_country_connections(connections, ax, world, continent_list)
+            lc = TreeVisualizer.plot_country_connections(connections, ax, world, continent_list)
 
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="4%", pad=0.04)
@@ -168,17 +168,17 @@ class Tree_Visualizer:
         if num_children:
             for child in subtree_rooted_at.children:
                 result.append((current_airport, Airport(str(child.data))))
-                result.extend(Tree_Visualizer.collect_connections(child, num_children=num_children-1,
-                                                                  num_parents=0))
+                result.extend(TreeVisualizer.collect_connections(child, num_children=num_children - 1,
+                                                                 num_parents=0))
 
         if num_parents and not subtree_rooted_at.is_root():
             result.append((Airport(str(subtree_rooted_at.parent.data)), current_airport))
-            result.extend(Tree_Visualizer.collect_connections(subtree_rooted_at, num_children=0,
-                                                              num_parents=num_parents-1))
+            result.extend(TreeVisualizer.collect_connections(subtree_rooted_at, num_children=0,
+                                                             num_parents=num_parents-1))
 
         return result
 
-    def create_LineCollection(src: Airport, dest: Airport, n: int = 100) -> LineCollection:
+    def create_line_collection(src: Airport, dest: Airport, n: int = 100) -> LineCollection:
         """
         Creates a LineCollection object, which represents a directed dotted line between two Airports
 
@@ -241,13 +241,13 @@ class Tree_Visualizer:
                     not continents or (
                     world[world.iso_a3 == src.country].continent.isin(continents).all() and
                     world[world.iso_a3 == dest.country].continent.isin(continents).all()
-            )
+                    )
             ):
                 if (src.country not in countries or dest.country not in countries) and src.country != dest.country:
                     countries.add(src.country)
                     countries.add(dest.country)
                     ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
-                    lc = Tree_Visualizer.create_LineCollection(src, dest, n)
+                    lc = TreeVisualizer.create_line_collection(src, dest, n)
                     ax.add_collection(lc)
                 else:
                     continue
@@ -285,10 +285,10 @@ class Tree_Visualizer:
                     not continents or (
                     world[world.iso_a3 == src.country].continent.isin(continents).all() and
                     world[world.iso_a3 == dest.country].continent.isin(continents).all()
-            )
+                    )
             ):
                 ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
-                lc = Tree_Visualizer.create_LineCollection(src, dest, n)
+                lc = TreeVisualizer.create_line_collection(src, dest, n)
                 ax.add_collection(lc)
 
         ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o", markersize=5, zorder=4)
@@ -306,5 +306,5 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        Tree_Visualizer.draw_tree(root.children[1], fig, ax, [], False, num_children=10, num_parents=10)
+        TreeVisualizer.draw_tree(root.children[1], fig, ax, [], False, num_children=10, num_parents=10)
         plt.show()

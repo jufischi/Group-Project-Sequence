@@ -48,8 +48,8 @@ class Sankoff:
 
     def perform_sankoff(self):
         """
-        Performs the Sankoff algorithm on the given tree and distance matrix by calling the functions _forward_pass(tree)
-        and _backward_pass(tree). Does not require any input.
+        Performs the Sankoff algorithm on the given tree and distance matrix by calling the functions
+        _forward_pass(tree) and _backward_pass(tree). Does not require any input.
         """
         self._forward_pass(self.tree)
         self._backward_pass(self.tree)
