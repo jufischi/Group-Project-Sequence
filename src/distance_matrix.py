@@ -51,13 +51,13 @@ class DistanceMatrix:
         :param file: str, file path
         :param delimiter: str, delimiter (optional)
         """
-        header = [x.replace("\"", "") for x in np.genfromtxt(
+        header = np.array([x.replace("\"", "") for x in np.genfromtxt(
             file,
             dtype=str,
             delimiter=delimiter,
             max_rows=1,
             autostrip=True
-            )[1:].tolist()]
+            )[1:]])
         matrix = np.genfromtxt(
             file,
             dtype=float,
@@ -75,8 +75,6 @@ class DistanceMatrix:
         :param header: list of str, column names
         :param matrix: 2D numpy.array, distance matrix
         """
-        assert len(header) == matrix[0, :].size == matrix[:, 0].size
-
         self.header = header
         self.matrix = matrix
         header_keys = {}
@@ -84,16 +82,27 @@ class DistanceMatrix:
             header_keys[self.header[i]] = i
         self.header_keys = header_keys
 
-    @profile
-    def get_distance(self, id_from, id_to):
+    # @profile
+    def get_distance(self, header_from, header_to):
         """
         returns distance between two elements in header
 
-        :param id_from: str, row name
-        :param id_to: str, column name
+        :param header_from: str, row name
+        :param header_to: str, column name
         :return: float, distance
         """
-        return self.matrix[self.header_keys[id_from], self.header_keys[id_to]]
+        return self.matrix[self.header_keys[header_from], self.header_keys[header_to]]
+
+    # @profile
+    def get_distance_from_index(self, id_from, id_to):
+        """
+        returns distance between two elements in header
+
+        :param id_from: integer, row id
+        :param id_to: integer, column id
+        :return: float, distance
+        """
+        return self.matrix[id_from, id_to]
 
     def get_header(self):
         """
@@ -109,7 +118,6 @@ class DistanceMatrix:
         :param names:
         :return:
         """
-        assert len(names) == self.matrix[0, :].size
 
         self.header = names
 
@@ -129,18 +137,18 @@ class TestDistanceMatrix(unittest.TestCase):
 
     def test_get_distance(self):
         m = DistanceMatrix()
-        m.set_distance_matrix(header=["a", "b"], matrix=np.array([[1, 2], [3, 4]]))
+        m.set_distance_matrix(header=np.array(["a", "b"]), matrix=np.array([[1, 2], [3, 4]]))
         self.assertEqual(m.get_distance(id_from="a", id_to="b"), 2)
 
     def test_get_size(self):
-        m = DistanceMatrix(data=[["a", "b"], np.array([[1, 2], [3, 4]])])
+        m = DistanceMatrix(data=[np.array(["a", "b"]), np.array([[1, 2], [3, 4]])])
         self.assertEqual(m.get_size(), 4)
 
     def test_get_header(self):
         m = DistanceMatrix()
-        m.set_distance_matrix(header=["c", "d"], matrix=np.array([[1, 2], [3, 4]]))
+        m.set_distance_matrix(header=np.array(["c", "d"]), matrix=np.array([[1, 2], [3, 4]]))
         m.set_header(["a", "b"])
-        self.assertEqual(m.get_header(), ["a", "b"])
+        self.assertTrue(np.array_equal(m.get_header(), np.array(["a", "b"])))
 
 
 if __name__ == '__main__':

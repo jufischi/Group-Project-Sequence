@@ -1,0 +1,89 @@
+Timer unit: 1e-06 s
+
+Total time: 19.7971 s
+File: /home/gnampfelix/repositories/github.com/jufischi/Group-Project-Sequence/src/distance_matrix.py
+Function: get_distance at line 86
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    86                                               def get_distance(self, header_from, header_to):
+    87                                                   """
+    88                                                   returns distance between two elements in header
+    89                                           
+    90                                                   :param header_from: str, row name
+    91                                                   :param header_to: str, column name
+    92                                                   :return: float, distance
+    93                                                   """
+    94                                                   return self.matrix[self.header_keys[header_from], self.header_keys[header_to]]
+
+Total time: 120.073 s
+File: /home/gnampfelix/repositories/github.com/jufischi/Group-Project-Sequence/src/sankoff.py
+Function: _forward_pass at line 75
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    75                                               # @profile
+    76                                               def _forward_pass(self, node):
+    77                                                   """
+    78                                                   Function to perform the forward pass of the Sankoff algorithm. Starting from the leaves, this function
+    79                                                   calculates the cost at each node for any given label.
+    80                                           
+    81                                                   Parameters
+    82                                                   ----------
+    83                                                   node : Node
+    84                                                       Currently worked on node
+    85                                           
+    86                                                   Returns
+    87                                                   -------
+    88                                                   array
+    89                                                       with key = label and value = cost for the given node
+    90                                                   """
+    91       586        141.6      0.2      0.0          if not node.is_leaf():
+    92       586        312.4      0.5      0.0              array_of_children = np.stack([self._forward_pass(child) for child in node.children])
+    93       585        990.0      1.7      0.0              for from_index in range(len(self.distance_matrix.header)):
+    94       378        595.1      1.6      0.0                  cost = 0
+    95     47424      28617.8      0.6      0.0                  for child in array_of_children:                    
+    96     47424      13551.3      0.3      0.0                      _calculate_cost = lambda to_index: child[to_index] + self.distance_matrix.get_distance_from_index(from_index, to_index)
+    97    133380      76714.7      0.6      0.1                      cost += np.min(_calculate_cost(self.header_array))
+    98    133380  119725785.0    897.6     99.7                  node.data.array = np.append(node.data.array, cost)
+    99    133380     116743.9      0.9      0.1          return node.data.array    
+
+Total time: 0.692134 s
+File: /home/gnampfelix/repositories/github.com/jufischi/Group-Project-Sequence/src/sankoff.py
+Function: _backward_pass at line 103
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   103                                                   """
+
+Total time: 0.562356 s
+File: /home/gnampfelix/repositories/github.com/jufischi/Group-Project-Sequence/src/sankoff.py
+Function: _get_minimal_cost at line 118
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   118                                                   """
+   119                                                   Returns the minimal cost at a given node and the corresponding label.
+   120                                           
+   121                                                   Parameters
+   122                                                   ----------
+   123                                                   node : Node
+   124                                                       Currently worked on node
+   125                                           
+   126                                                   Returns
+   127                                                   -------
+   128                                                   key : String
+   129                                                       label for which the cost is minimal
+   130                                                   min_cost : int
+   131                                                       minimal cost
+   132                                                   key_index : int
+   133                                                       index of the key in the header of the distance matrix
+   134                                                   """
+   135       585        874.4      1.5      0.2          if node.is_root():
+   136         1          9.1      9.1      0.0              min_cost = np.min(node.data.array)
+   137       141         81.0      0.6      0.0              min_cost_index = np.argmin(node.data.array)            
+   138       140         33.3      0.2      0.0              return self.distance_matrix.header[min_cost_index], min_cost, min_cost_index
+   139         1          1.3      1.3      0.0  
+   140                                                   else:
+   141       585       1007.4      1.7      0.2              _calculate_cost = lambda to_index: node.data.array[to_index] + self.distance_matrix.get_distance_from_index(node.parent.data.label_index, to_index)
+
