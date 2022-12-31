@@ -1,5 +1,5 @@
 from newick_parser import NewickParser
-from tree_visualizer import Tree_Visualizer
+from tree_visualizer import TreeVisualizer
 from matplotlib import pyplot as plt
 from sankoff import Sankoff
 import airportsdata
@@ -8,9 +8,20 @@ import os
 
 class AirportTipMapper:
     """
-    A class to map the tips of a given phylogenetic tree to airports.
+    A class used to read a file containing tip mapping from label to airport and generating a dictionary from the data.
+
+    Attributes
+    ----------
+    tip_file_path : String
+        The path to the file containing the tip mapping from label to airport
     """
     def __init__(self, tip_file_path: str) -> None:
+        """
+        Parameters
+        ----------
+        tip_file_path : String
+            The path to the file containing the tip mapping from label to airport
+        """
         self.data = {}
         with open(tip_file_path, "r") as file:
             for line in file.readlines()[1:]:
@@ -20,9 +31,21 @@ class AirportTipMapper:
 
 class CountryTipMapper:
     """
-    A class to map the tips of a given phylogenetic tree to countries.
+    A class used to read a file containing tip mapping from label to airport and
+    generating a dictionary that maps the tip data to the countries of the airports.
+
+    Attributes
+    ----------
+    tip_file_path : String
+        The path to the file containing the tip mapping from label to airport
     """
     def __init__(self, tip_file_path: str) -> None:
+        """
+        Parameters
+        ----------
+        tip_file_path : String
+            The path to the file containing the tip mapping from label to airport
+        """
         self.data = {}
         airports = airportsdata.load("IATA")
         with open(tip_file_path, "r") as file:
@@ -64,7 +87,7 @@ def main() -> None:
                 variant_tree = sankoff.tree
 
             fig, ax = plt.subplots()
-            Tree_Visualizer.draw_tree(variant_tree, ax, [])
+            TreeVisualizer.draw_tree(variant_tree, fig, ax, [])
             plt.show()
 
 
