@@ -62,6 +62,7 @@ class Airport:
     """
     airport_locations = airportsdata.load("IATA")
     airport_locations["LAM"] = lam_airport
+
     def __init__(self, name: str) -> None:
         """
         Parameters
