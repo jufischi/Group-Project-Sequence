@@ -72,6 +72,17 @@ class Node:
             child.parent = self
         self.children.append(child)
 
+    def prune_child(self, child):
+        """
+        Removes a child node from the node.
+
+        Parameters
+        ----------
+        child : Node
+            The node that is removed from the node as a child.
+        """
+        self.children.remove(child)
+
     def is_leaf(self):
         """
         Checks whether the node is a leaf node.
@@ -256,6 +267,21 @@ class TestNode(unittest.TestCase):
         root.add_child_node(internal_node)
         determined_root = leaf_node.get_root()
         self.assertEqual(root, determined_root)
+
+    def test_prune_child(self):
+        root = Node(1)
+        root.add_child(2)
+        root.add_child(3)
+        internal_node = Node(4)
+        internal_node.add_child(5)
+        internal_node.add_child(6)
+        root.add_child_node(internal_node)
+        root.prune_child(internal_node)
+        leaves = map(lambda x: x.data, root.get_leaves())
+        self.assertIn(2, leaves)
+        self.assertIn(3, leaves)
+        self.assertNotIn(5, leaves)
+        self.assertNotIn(6, leaves)
 
 
 if __name__ == '__main__':
