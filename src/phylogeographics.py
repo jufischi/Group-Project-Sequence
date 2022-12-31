@@ -6,7 +6,21 @@ import os
 
 
 class TipMapper:
+    """
+    A class used to read a file containing tip mapping from label to airport and generating a dictionary from the data.
+
+    Attributes
+    ----------
+    tip_file_path : String
+        The path to the file containing the tip mapping from label to airport
+    """
     def __init__(self, tip_file_path: str) -> None:
+        """
+        Parameters
+        ----------
+        tip_file_path : String
+            The path to the file containing the tip mapping from label to airport
+        """
         self.data = {}
         # airports = airportsdata.load("IATA")
         with open(tip_file_path, "r") as file:
@@ -25,7 +39,7 @@ def main() -> None:
         sankoff.perform_sankoff()
 
         fig, ax = plt.subplots()
-        TreeVisualizer.draw_tree(sankoff.tree, ax, [])
+        TreeVisualizer.draw_tree(sankoff.tree, fig, ax, [])
         plt.show()
 
 
