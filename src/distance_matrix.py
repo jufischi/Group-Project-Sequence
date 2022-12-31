@@ -136,7 +136,7 @@ class TestDistanceMatrix(unittest.TestCase):
     def test_get_distance(self):
         m = DistanceMatrix()
         m.set_distance_matrix(header=np.array(["a", "b"]), matrix=np.array([[1, 2], [3, 4]]))
-        self.assertEqual(m.get_distance(id_from="a", id_to="b"), 2)
+        self.assertEqual(m.get_distance(header_from="a", header_to="b"), 2)
 
     def test_get_size(self):
         m = DistanceMatrix(data=[np.array(["a", "b"]), np.array([[1, 2], [3, 4]])])
