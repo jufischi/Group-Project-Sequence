@@ -1,7 +1,7 @@
-from newick_parser import NewickParser
 from tree_visualizer import TreeVisualizer
 from matplotlib import pyplot as plt
 from sankoff import Sankoff
+from newick_parser import NewickParser
 import airportsdata
 import os
 
@@ -58,13 +58,13 @@ def main() -> None:
     cwd = ".."
     with open(os.path.join(cwd, "data", "pH1N1_until_20093004_cds_rooted.labeled.phy"), "r") as file:
         newick_string = file.readlines()[0]
-        countryMapper = CountryTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
-        airportMapper = AirportTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
+        country_mapper = CountryTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
+        airport_mapper = AirportTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
         variants = [
-            ("geographic.distance.matrix.csv", "airport_geographic", airportMapper),
-            ("effective.distance.matrix.csv", "airport_effective", airportMapper),
-            ("geographic.distance.matrix.country.csv", "country_geographic", countryMapper),
-            ("effective.distance.matrix.country.csv", "country_effective", countryMapper)
+            ("geographic.distance.matrix.csv", "airport_geographic", airport_mapper),
+            ("effective.distance.matrix.csv", "airport_effective", airport_mapper),
+            ("geographic.distance.matrix.country.csv", "country_geographic", country_mapper),
+            ("effective.distance.matrix.country.csv", "country_effective", country_mapper)
         ]
 
         for variant_matrix_name, variant_name, variant_mapper in variants:
