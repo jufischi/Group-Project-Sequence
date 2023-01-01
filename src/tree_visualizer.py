@@ -162,6 +162,57 @@ class TreeVisualizer:
         cbar = fig.colorbar(lc, ax=ax, cax=cax)
         cbar.ax.get_yaxis().set_ticks([-n / 2, n], labels=["src", "dest"])
 
+    def draw_path_to_root(root: Node, label: str, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [],
+                          every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100):
+        """
+        Prunes the given tree to only contain all paths from a given label to the root. Then calls upon the
+        draw_tree() function to draw the pruned tree. This function destroys the tree object.
+
+        Parameters
+        ----------
+        root: Node
+            The root of the tree to display on the world map
+        label: String
+            label of nodes for which we want the pruned subtree
+        fig: pyplot.Figure
+            Figure containing all subfigures
+        ax: pyplot.Axes
+            The subfigure in which the tree should be displayed
+        continent_list: List[str]
+            Optional list of continents to display, e.g. "South America". If
+            this list is not set or empty, the whole world is displayed.
+        every: bool
+            Optional boolean to specify if every airport or only its country
+            should be visualized
+        num_children: float
+            Optional float value defining how many children should be drawn
+        num_parents: int
+            Optional int value defining how many parents should be drawn
+        n: int
+            optional, number of drawn points between one connection
+        """
+
+        def prune_tree(node: Node, label: str):
+            """
+            Internal function to prune the tree to only contain all paths from a given label to the root.
+
+            Parameters
+            ----------
+            node: Node
+                The root of the tree to be pruned
+            label: String
+                label of nodes for which we want the pruned subtree
+            """
+            for child in node.children[:]:
+                prune_tree(child, label)
+            if str(node.data) != label and len(node.children) == 0:
+                parent = node.parent
+                parent.prune_child(node)
+
+        prune_tree(root, label)  # prune tree
+        # run visualizer using pruned tree:
+        TreeVisualizer.draw_tree(root, fig, ax, continent_list, every, num_children, num_parents, n)
+
     def collect_connections(subtree_rooted_at: Node, num_children: float = np.inf, num_parents: int = 0) \
             -> List[Tuple[Airport, Airport]]:
         """
@@ -321,7 +372,7 @@ class TreeVisualizer:
 
 
 class TestVisualizer:
-    def visualize(self) -> None:
+    def visualize() -> None:
         root = Node("STR")
         root.add_child("MUC")
         root.add_child("BER")
