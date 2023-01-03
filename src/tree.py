@@ -28,8 +28,14 @@ class Node:
         checks whether the node is a leaf
     is_root()
         checks whether the node is the root
+    get_newick(with_edge_lengths=True, with_semicolon=True)
+        returns a Newick string for the tree below the given node (including it)
     get_leaves()
         returns a list of all leaf nodes that are located below the node
+    get_root()
+        returns the root located above the given node.
+    copy_tree()
+        returns a deep copy of the tree starting from the given node.
     """
     def __init__(self, data, parent=None, edge_length_to_parent=None):
         """
@@ -193,7 +199,7 @@ class Node:
 
     def get_root(self):
         """
-        Returns the root located above the node.
+        Returns the root located above the given node.
 
         Returns
         -------
@@ -207,7 +213,7 @@ class Node:
 
     def copy_tree(self):
         """
-        Returns a deep copy of the tree starting from the root node.
+        Returns a deep copy of the tree starting from the given node.
 
         Returns
         -------
