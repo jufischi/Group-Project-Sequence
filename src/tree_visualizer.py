@@ -97,6 +97,10 @@ class TreeVisualizer:
         Draws the tree represented by its root node on the given
         matplotlib.pyplot Axis. This will produce a vector based world map with
         the tree plotted onto it.
+    draw_path_to_root(root: Node, label: str, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [],
+                          every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100)
+        Prunes the given tree to only contain all paths from a given label to the root.
+        Then calls upon the draw_tree() function to draw the pruned tree.
     collect_connections(subtree_rooted_at Node)
         Traverses the tree recursively starting on the given node and returns
         all edges of that tree as a list of tuples of two airports.
@@ -166,7 +170,7 @@ class TreeVisualizer:
                           every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100):
         """
         Prunes the given tree to only contain all paths from a given label to the root. Then calls upon the
-        draw_tree() function to draw the pruned tree. This function destroys the tree object.
+        draw_tree() function to draw the pruned tree.
 
         Parameters
         ----------
@@ -191,7 +195,6 @@ class TreeVisualizer:
         n: int
             optional, number of drawn points between one connection
         """
-
         def prune_tree(node: Node, label: str):
             """
             Internal function to prune the tree to only contain all paths from a given label to the root.
@@ -209,9 +212,10 @@ class TreeVisualizer:
                 parent = node.parent
                 parent.prune_child(node)
 
-        prune_tree(root, label)  # prune tree
+        root_copy = root.copy_tree()  # create copy of the tree to not destroy the original tree
+        prune_tree(root_copy, label)  # prune tree
         # run visualizer using pruned tree:
-        TreeVisualizer.draw_tree(root, fig, ax, continent_list, every, num_children, num_parents, n)
+        TreeVisualizer.draw_tree(root_copy, fig, ax, continent_list, every, num_children, num_parents, n)
 
     def collect_connections(subtree_rooted_at: Node, num_children: float = np.inf, num_parents: int = 0) \
             -> List[Tuple[Airport, Airport]]:
