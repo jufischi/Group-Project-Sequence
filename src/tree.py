@@ -22,6 +22,8 @@ class Node:
         adds a child to the node given its label and an optional edge_length
     add_child_node(child)
         adds a child node to the node
+    prune_child(child)
+        removes the child node from the node
     is_leaf()
         checks whether the node is a leaf
     is_root()
@@ -74,7 +76,7 @@ class Node:
 
     def prune_child(self, child):
         """
-        Removes a child node from the node.
+        Removes the child node from the node. Also removes the whole subtree below the child node.
 
         Parameters
         ----------
@@ -203,6 +205,37 @@ class Node:
         parent = self.parent
         return parent.get_root()
 
+    def copy_tree(self):
+        """
+        Returns a deep copy of the tree starting from the root node.
+
+        Returns
+        -------
+        tree_copy : Node
+            the root node of the copied tree
+        """
+        def recursion(copy, original):
+            """
+            This function performs the recursive step of the deepcopy function.
+
+            Parameters
+            ----------
+            copy : Node
+                the copied tree
+            original : Node
+                the original tree
+            """
+            child_node = Node(original.data, copy, original.edge_length_to_parent)
+            copy.add_child_node(child_node)
+            for child in original.children:
+                recursion(child_node, child)
+
+        # Generate root node for the copy
+        tree_copy = Node(self.data, self.parent, self.edge_length_to_parent)
+        for child in self.children:  # for each child of the root, do the recursion
+            recursion(tree_copy, child)
+        return tree_copy
+
 
 class TestNode(unittest.TestCase):
     """
@@ -282,6 +315,19 @@ class TestNode(unittest.TestCase):
         self.assertIn(3, leaves)
         self.assertNotIn(5, leaves)
         self.assertNotIn(6, leaves)
+
+    def test_copy_tree(self):
+        root = Node(1)
+        root.add_child(2)
+        root.add_child(3)
+        internal_node = Node(4)
+        internal_node.add_child(5)
+        internal_node.add_child(6)
+        root.add_child_node(internal_node)
+        root_copy = root.copy_tree()
+        self.assertEqual(internal_node.data, root_copy.children[2].data)
+        root_copy.children[2].data = 7
+        self.assertNotEqual(internal_node.data, root_copy.children[2].data)
 
 
 if __name__ == '__main__':
