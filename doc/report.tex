@@ -36,101 +36,64 @@
   Felix Seidel \\
   Universität Tübingen \\
   \texttt{felix.seidel@student.uni-tuebingen.de} \\
-  XXXXXXX \\
+  5969276 \\
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-\lipsum[1]
 \end{abstract}
 
 
 \section{Introduction}
-\lipsum[2]
-\lipsum[3]
+Given a rooted tree $T$ with labeled leaves, the small parsimony problem is about
+finding labels for the internal nodes of the tree such that the changes from an
+internal nodes to all of its children are minimal
+\cite{jonesIntroductionBioinformaticsAlgorithms2004}.
+Among others, the Sankoff algorithm can be used to solve the small parsimony
+problem \cite{sankoffMinimalMutationTrees1975}. 
 
+\textbf{TODO: maybe short description of how Sankoff works?}
 
-\section{Headings: first level}
-\label{sec:headings}
+The Sankoff algorithm is usually applied the broader scope of
+inferring phylogenetic trees using cost matrices that model the transition
+between different DNA or RNA nucleotides
+\cite{jonesIntroductionBioinformaticsAlgorithms2004}. By using different cost
+matrices, the algorithm can also be used to model other biological questions,
+for example in the Camin-Sokal-Parsimony \cite{caminMethodDeducingBranching1965}
+or in the Dollo-Parsimony \cite{farrisPhylogeneticAnalysisDollo2022}. More
+recently, the Sankoff algorithm was also used to infer the geographic origins of
+the 2009 H1N1 pandemic using a distance matrix that represents the distances of
+various international airports
+\cite{reimeringPhylogeographicReconstructionUsing2020}. In this, the authors use
+a phylogenetic tree that represents the relationship between different strains
+of the virus and map each taxon to the airport that is closest to the sampling
+location. Then, three different cost matrices are utilized:
 
-\lipsum[4] See Section \ref{sec:headings}.
+\begin{enumerate}
+  \item Equal distance: Airports have a distance of 1 to each other
+  \item Geographic distance: The actual geographic distances between different
+  airports is used.
+  \item Effective distances: A infection is more likely to spread from
+  airport $A$ to airport $B$ if there are many people traveling from $A$ to
+  $B$. Thus, the effective distances are calculated by using passenger data
+  for each combination of airports.
+\end{enumerate}
 
-\subsection{Headings: second level}
-\lipsum[5]
-\begin{equation}
-\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-\end{equation}
+Using those cost matrices for airports and for the corresponding countries, the
+labels for the internal nodes of the tree are calculated and thus their
+geographic position.
 
-\subsubsection{Headings: third level}
-\lipsum[6]
+In the following report, we implement the method outlined in
+\cite{reimeringPhylogeographicReconstructionUsing2020} and recreate the findings
+by using the original data.
 
-\paragraph{Paragraph}
-\lipsum[7]
+\section{Results}
 
-\section{Examples of citations, figures, tables, references}
-\label{sec:others}
-\lipsum[8] \cite{kour2014real,kour2014fast} and see \cite{hadash2018estimate}.
+\section{Material and Methods}
 
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-
-\subsection{Figures}
-\lipsum[10] 
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11] 
-
-\begin{figure}
-  \centering
-  \fbox{\rule[-.5cm]{4cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-  \label{fig:fig1}
-\end{figure}
-
-\subsection{Tables}
-\lipsum[12]
-See awesome Table~\ref{tab:table}.
-
-\begin{table}
- \caption{Sample table title}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:table}
-\end{table}
-
-\subsection{Lists}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet
-\item consectetur adipiscing elit. 
-\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
+\section{Discussion}
 
 
 \bibliographystyle{unsrt}  

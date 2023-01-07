@@ -37,7 +37,6 @@ lam_airport = {
     "lat": 35.8796861111111,
     "lon": -106.268686111111,
     "tz": "America/Denver",
-    "tz": "America/Denver",
     "lid": "LAM"
 }
 

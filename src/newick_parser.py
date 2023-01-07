@@ -89,7 +89,7 @@ class NewickParser:
         Parses the input Newick String by calling the function parse_input(input, parent) with a modified version of the
         Newick String, which lacks the semicolon.
         """
-        self.root = self.parse_input(self.input[:-1], None)
+        self.root = self.parse_input(self.input.strip()[:-1], None)
 
 
 class TestNewickParser(unittest.TestCase):
