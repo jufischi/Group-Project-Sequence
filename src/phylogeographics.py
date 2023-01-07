@@ -87,7 +87,7 @@ def main() -> None:
                 variant_tree = sankoff.tree
 
             fig, ax = plt.subplots()
-            TreeVisualizer.draw_tree(variant_tree, fig, ax, [])
+            TreeVisualizer.draw_tree(variant_tree, fig, ax, [], color="lightgrey")
             plt.show()
 
 
