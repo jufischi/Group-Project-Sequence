@@ -105,7 +105,7 @@ class TreeVisualizer:
         all edges of that tree as a list of tuples of two airports.
     """
     def draw_tree(root: Node, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [], every: bool = True,
-                  num_children: float = np.inf, num_parents: int = 0, n: int = 100, color: str="red") -> None:
+                  num_children: float = np.inf, num_parents: int = 0, n: int = 100, color: str = "red") -> None:
         """
         Draws the tree represented by its root node on the given
         matplotlib.pyplot Axis. This will produce a vector based world map with
@@ -133,6 +133,8 @@ class TreeVisualizer:
             Optional int value defining how many parents should be drawn
         n: int
             optional, number of drawn points between one connection
+        color: str
+            optional, determines color of arrow between two locations
         """
         world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
 
@@ -167,7 +169,8 @@ class TreeVisualizer:
             cbar.ax.get_yaxis().set_ticks([-n / 2, n], labels=["src", "dest"])
 
     def draw_path_to_root(root: Node, label: str, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [],
-                          every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100):
+                          every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100,
+                          color: str = "red"):
         """
         Prunes the given tree to only contain all paths from a given label to the root. Then calls upon the
         draw_tree() function to draw the pruned tree.
@@ -194,6 +197,8 @@ class TreeVisualizer:
             Optional int value defining how many parents should be drawn
         n: int
             optional, number of drawn points between one connection
+        color: str
+            optional, determines color of arrow between two locations
         """
         def prune_tree(node: Node, label: str):
             """
@@ -215,7 +220,7 @@ class TreeVisualizer:
         root_copy = root.copy_tree()  # create copy of the tree to not destroy the original tree
         prune_tree(root_copy, label)  # prune tree
         # run visualizer using pruned tree:
-        TreeVisualizer.draw_tree(root_copy, fig, ax, continent_list, every, num_children, num_parents, n)
+        TreeVisualizer.draw_tree(root_copy, fig, ax, continent_list, every, num_children, num_parents, n, color)
 
     def collect_connections(subtree_rooted_at: Node, num_children: float = np.inf, num_parents: int = 0) \
             -> List[Tuple[Airport, Airport]]:
@@ -250,7 +255,6 @@ class TreeVisualizer:
                 result.append((current_airport, Airport(str(child.data))))
                 result.extend(TreeVisualizer.collect_connections(child, num_children=num_children - 1,
                                                                  num_parents=0))
-
 
         if num_parents and not subtree_rooted_at.is_root():
             result.append((Airport(str(subtree_rooted_at.parent.data)), current_airport))
@@ -336,7 +340,7 @@ class TreeVisualizer:
 
     def plot_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
                          world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = [],
-                         n: int = 100, color: str="red") -> LineCollection:
+                         n: int = 100, color: str = "red") -> LineCollection:
         """
         Draws connections between Airports. The location of each airport is centered in the corresponding country.
         All connections within one country are therefore not visible.
@@ -356,12 +360,14 @@ class TreeVisualizer:
             this list is not set or empty, the whole world is displayed.
         n: int
             optional, number of drawn points for each line
+        color: str
+            optional, determines color of arrow between two locations
 
         Returns
         ----------
         matplotlib object LineCollection
         """
-        #TODO color parameter
+        # TODO color parameter
         for src, dest in connections:
             if (
                     not continents or (
@@ -400,6 +406,7 @@ class TreeVisualizer:
         else:
             print(label, d[label])
             return d[label]
+
 
 class TestVisualizer:
     def visualize() -> None:
