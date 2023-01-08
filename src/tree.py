@@ -379,6 +379,7 @@ class TreeLabel:
     def __str__(self):
         return str(self.label)
 
+
 if __name__ == '__main__':
     root = Node(TreeLabel(1, 7, None, None))
     root.add_child(TreeLabel(2, 8, None, None))
