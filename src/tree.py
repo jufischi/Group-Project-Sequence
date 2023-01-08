@@ -30,6 +30,8 @@ class Node:
         checks whether the node is the root
     get_newick(with_edge_lengths=True, with_semicolon=True)
         returns a Newick string for the tree below the given node (including it)
+    get_annotation()
+        returns the annotation of the tree below the given node (including it)
     get_leaves()
         returns a list of all leaf nodes that are located below the node
     get_root()
@@ -143,6 +145,23 @@ class Node:
         if with_semicolon:
             result += ";"
         return result
+
+    def get_annotation(self):
+        """
+        Returns the annotation of the tree below the given node (including it). Does not require any parameters.
+        Can only be used with tree objects that have TreeLabel objects as their data.
+
+        Returns
+        -------
+        String
+            annotation
+        """
+        def get_labels(node):
+            result = f"{node.data.info}\t{str(node.data)}\n"
+            for child in node.children:
+                result += get_labels(child)
+            return result
+        return "label\tlocation\n" + get_labels(self)
 
     def __str__(self):
         """
@@ -336,5 +355,37 @@ class TestNode(unittest.TestCase):
         self.assertNotEqual(internal_node.data, root_copy.children[2].data)
 
 
+class TreeLabel:
+    """
+    A class to store the information about a node in the tree
+
+    Attributes
+    ----------
+    label : String
+        information about the location (airport or country)
+    info : String
+        additional information about the node (e.g. sequence ID)
+    array : np.array
+        stores cost at each node and node label for computation of Sankoff
+    label_index: int
+        index of the label in the distance matrix header
+    """
+    def __init__(self, label, info, array, label_index):
+        self.label = label
+        self.info = info
+        self.array = array
+        self.label_index = label_index
+
+    def __str__(self):
+        return str(self.label)
+
 if __name__ == '__main__':
+    root = Node(TreeLabel(1, 7, None, None))
+    root.add_child(TreeLabel(2, 8, None, None))
+    root.add_child(TreeLabel(3, 9, None, None))
+    internal_node = Node(TreeLabel(4, 10, None, None))
+    internal_node.add_child(TreeLabel(5, 11, None, None))
+    internal_node.add_child(TreeLabel(6, 12, None, None))
+    root.add_child_node(internal_node)
+    print(root.get_annotation())
     unittest.main()

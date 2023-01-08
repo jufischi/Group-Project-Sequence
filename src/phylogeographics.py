@@ -86,6 +86,11 @@ def main() -> None:
                     variant_file.writelines(sankoff.tree.get_newick())
                 variant_tree = sankoff.tree
 
+                # Generate files containing annotation
+                variant_annotation_file_path = os.path.join(cwd, "data", f"{variant_name}.annotation.txt")
+                with open(variant_annotation_file_path, "w") as variant_annotation:
+                    variant_annotation.writelines(variant_tree.get_annotation())
+
             fig, ax = plt.subplots()
             TreeVisualizer.draw_tree(variant_tree, fig, ax, [])
             plt.show()
