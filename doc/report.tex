@@ -13,6 +13,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{lipsum}
 \usepackage{graphicx}
+\usepackage{todonotes}
 
 \title{The Sankoff Algorithm for Phylogeographics}
 
@@ -54,12 +55,20 @@ internal nodes to all of its children are minimal
 Among others, the Sankoff algorithm can be used to solve the small parsimony
 problem \cite{sankoffMinimalMutationTrees1975}. 
 
-\textbf{TODO: maybe short description of how Sankoff works?}
+Sankoff's algorithm is designed to use an already existing phylogenetic tree with labeled leaves and
+some form of cost matrix to label the internal nodes in a way that minimizes the cost based on the
+matrix and underlying leaves. For this the algorithm uses two phases a forward and a backward pass.
+The forward pass fills for every node a list detailing what choosing a certain label would incur in
+cost. It starts with the internal nodes just above the leaves and ends with the root. This is the
+more calculation intensive part of the algorithm. The second part is the backward pass. It starts at
+the root and ends with the internal nodes above the leaves. Its task is to choose the correct label
+based on the cost lists. This results in the labeled tree.
 
-The Sankoff algorithm is usually applied the broader scope of
+The Sankoff algorithm is usually applied to the broader scope of
 inferring phylogenetic trees using cost matrices that model the transition
 between different DNA or RNA nucleotides
-\cite{jonesIntroductionBioinformaticsAlgorithms2004}. By using different cost
+\cite{jonesIntroductionBioinformaticsAlgorithms2004}, i.e. solving the large parsimony problem. By
+using different cost
 matrices, the algorithm can also be used to model other biological questions,
 for example in the Camin-Sokal-Parsimony \cite{caminMethodDeducingBranching1965}
 or in the Dollo-Parsimony \cite{farrisPhylogeneticAnalysisDollo2022}. More
@@ -85,9 +94,28 @@ Using those cost matrices for airports and for the corresponding countries, the
 labels for the internal nodes of the tree are calculated and thus their
 geographic position.
 
+One of the advantages in using the Sankoff algorithm for this problem as opposed to more
+conventional approaches is, as the authors describe a gain in performance. This is due to the fact
+that the Sankoff algorithm is comparatively simple. Additionally, large parts can be implemented as
+operations on matrices which can be done very quick in modern computers because of easy
+parallelization and efficient libraries, such as BLAS \cite{lawsonBasicLinearAlgebra1979}. As
+datasets can be quite large due to a large
+amount of locations (in this case airports) and sequences having a fast
+algorithm to even approximate the correct solution can be instrumental in getting a solution.
+
 In the following report, we implement the method outlined in
 \cite{reimeringPhylogeographicReconstructionUsing2020} and recreate the findings
 by using the original data.
+
+\section{Material and Methods}
+The Sankoff algorithm was implemented using the Python
+\cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
+efficient matrix operations.
+
+All visualizations (with the exception of visualizations from the original paper)\todo{Do we need
+this?} were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
+airports Geopandas \cite{GeoPandas12GeoPandas} was used. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
+airpots and pycountry \cite{theunePycountryISOCountry} to translate letter codes of countries.
 
 \section{Results}
 
@@ -115,7 +143,6 @@ The Fr\'{e}chet distance between our trees:
     \item airport to country comparison not possible due to distance matrix
 \end{itemize}
 
-\section{Material and Methods}
 
 \section{Discussion}
 
