@@ -92,7 +92,7 @@ def main() -> None:
                     variant_annotation.writelines(variant_tree.get_annotation())
 
             fig, ax = plt.subplots()
-            TreeVisualizer.draw_tree(variant_tree, fig, ax, [])
+            TreeVisualizer.draw_tree(variant_tree, fig, ax, [], color="lightgrey")
             plt.show()
 
 

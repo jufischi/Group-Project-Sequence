@@ -105,7 +105,7 @@ class TreeVisualizer:
         all edges of that tree as a list of tuples of two airports.
     """
     def draw_tree(root: Node, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [], every: bool = True,
-                  num_children: float = np.inf, num_parents: int = 0, n: int = 100) -> None:
+                  num_children: float = np.inf, num_parents: int = 0, n: int = 100, color: str="red") -> None:
         """
         Draws the tree represented by its root node on the given
         matplotlib.pyplot Axis. This will produce a vector based world map with
@@ -151,7 +151,7 @@ class TreeVisualizer:
                                                                                           linewidth=0.2)
 
         if every:
-            lc = TreeVisualizer.plot_connections(connections, ax, world, continent_list)
+            lc = TreeVisualizer.plot_connections(connections, ax, world, continent_list, color=color)
         else:
             for src, dest in connections:
                 src.x = world[world.iso_a3 == src.country].centroid.x
@@ -160,10 +160,11 @@ class TreeVisualizer:
                 dest.y = world[world.iso_a3 == dest.country].centroid.y
             lc = TreeVisualizer.plot_country_connections(connections, ax, world, continent_list)
 
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="4%", pad=0.04)
-        cbar = fig.colorbar(lc, ax=ax, cax=cax)
-        cbar.ax.get_yaxis().set_ticks([-n / 2, n], labels=["src", "dest"])
+        if lc is not None:
+            divider = make_axes_locatable(ax)
+            cax = divider.append_axes("right", size="4%", pad=0.04)
+            cbar = fig.colorbar(lc, ax=ax, cax=cax)
+            cbar.ax.get_yaxis().set_ticks([-n / 2, n], labels=["src", "dest"])
 
     def draw_path_to_root(root: Node, label: str, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [],
                           every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100):
@@ -250,6 +251,7 @@ class TreeVisualizer:
                 result.extend(TreeVisualizer.collect_connections(child, num_children=num_children - 1,
                                                                  num_parents=0))
 
+
         if num_parents and not subtree_rooted_at.is_root():
             result.append((Airport(str(subtree_rooted_at.parent.data)), current_airport))
             result.extend(TreeVisualizer.collect_connections(subtree_rooted_at, num_children=0,
@@ -325,7 +327,7 @@ class TreeVisualizer:
                 if (src.country not in countries or dest.country not in countries) and src.country != dest.country:
                     countries.add(src.country)
                     countries.add(dest.country)
-                    ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
+                    ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=3, zorder=3)
                     lc = TreeVisualizer.create_line_collection(src, dest, n)
                     ax.add_collection(lc)
                 else:
@@ -334,7 +336,7 @@ class TreeVisualizer:
 
     def plot_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
                          world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = [],
-                         n: int = 100) -> LineCollection:
+                         n: int = 100, color: str="red") -> LineCollection:
         """
         Draws connections between Airports. The location of each airport is centered in the corresponding country.
         All connections within one country are therefore not visible.
@@ -359,6 +361,7 @@ class TreeVisualizer:
         ----------
         matplotlib object LineCollection
         """
+        #TODO color parameter
         for src, dest in connections:
             if (
                     not continents or (
@@ -366,13 +369,37 @@ class TreeVisualizer:
                     world[world.iso_a3 == dest.country].continent.isin(continents).all()
                     )
             ):
-                ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=5, zorder=3)
-                lc = TreeVisualizer.create_line_collection(src, dest, n)
-                ax.add_collection(lc)
+                ax.plot([src.x, dest.x], [src.y, dest.y], " ", color=color, marker="o", markersize=3, zorder=3)
+                if color == "red":
+                    lc = TreeVisualizer.create_line_collection(src, dest, n)
+                    ax.add_collection(lc)
+                else:
+                    lc = None
+                    ax.plot([src.x, dest.x], [src.y, dest.y], "-", color=TreeVisualizer.get_color(label=src.name),
+                            zorder=2)
 
-        ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o", markersize=5, zorder=4)
+        ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o", markersize=3, zorder=4)
         return lc
 
+    def get_color(label: str) -> str:
+        """
+        Returns a specific color for different airports.
+
+        Parameters
+        ----------
+        label: str
+            Label of Airports
+
+        Returns
+        ----------
+        str
+        """
+        d = {'MEX': "orange", 'ORD': "pink", 'CUN': "darkgreen", 'VER': "yellow", 'ZCL': "lightblue"}
+        if label not in d.keys():
+            return "blue"
+        else:
+            print(label, d[label])
+            return d[label]
 
 class TestVisualizer:
     def visualize() -> None:
