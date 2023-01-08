@@ -21,7 +21,7 @@
   Julia Fischer \\
   Universität Tübingen \\
   \texttt{juli.fischer@student.uni-tuebingen.de} \\
-  XXXXXXX \\
+  6039174 \\
   \And
   Peter Heringer \\
   Universität Tübingen \\
@@ -90,6 +90,30 @@ In the following report, we implement the method outlined in
 by using the original data.
 
 \section{Results}
+
+
+
+\subsection{Fr\'{e}chet distances}
+\begin{itemize}
+    \item Fr\'{e}chet tree distances used to quantify geographic differences between spread paths
+    \item We compare our reconstructed trees with the ones from the paper
+    \item by claculating discrete Fr\'{e}chet tree distances using geographic distances between locations
+    \item method compares the paths of locations from the root of each leaf node, calculates discrete Fr\'{e}chet distances between them and corrects the distance for each node by the number of paths
+    \item we use Rscript from the authors for calculation \cite{reimeringFrechetTreeDistance2018}
+\end{itemize}
+
+Our inferred trees versus the trees from the paper:
+\begin{itemize}
+    \item geographic distances: 123.8497
+    \item effective distances: 0
+\end{itemize}
+
+The Fr\'{e}chet distance between our trees:
+\begin{itemize}
+    \item effective airport vs geographic airport: 65149
+    \item effective country vs geographic country: 12307.03
+    \item airport to country comparison not possible due to distance matrix
+\end{itemize}
 
 \section{Material and Methods}
 
