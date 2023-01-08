@@ -102,9 +102,6 @@ class Sankoff:
             node.data.array = np.array([calculate_cost_for_each_state(state) for state in self.header_array])
         return node.data.array
 
-
-
-
     def _backward_pass(self, node):
         """
         Function to perform the backward pass of the Sankoff algorithm. Starting from the root, this function assigns
