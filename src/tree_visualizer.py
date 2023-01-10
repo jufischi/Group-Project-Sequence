@@ -156,10 +156,13 @@ class TreeVisualizer:
             lc = TreeVisualizer.plot_connections(connections, ax, world, continent_list, color=color)
         else:
             for src, dest in connections:
-                src.x = world[world.iso_a3 == src.country].centroid.x
-                src.y = world[world.iso_a3 == src.country].centroid.y
-                dest.x = world[world.iso_a3 == dest.country].centroid.x
-                dest.y = world[world.iso_a3 == dest.country].centroid.y
+                try:
+                    src.x = world[world.iso_a3 == src.country].centroid.x.item()
+                    src.y = world[world.iso_a3 == src.country].centroid.y.item()
+                    dest.x = world[world.iso_a3 == dest.country].centroid.x.item()
+                    dest.y = world[world.iso_a3 == dest.country].centroid.y.item()
+                except Exception:
+                    continue
             lc = TreeVisualizer.plot_country_connections(connections, ax, world, continent_list)
 
         if lc is not None:
@@ -213,7 +216,7 @@ class TreeVisualizer:
             """
             for child in node.children[:]:
                 prune_tree(child, label)
-            if str(node.data) != label and len(node.children) == 0:
+            if Airport(str(node.data)).country != label and len(node.children) == 0 and node.parent is not None:
                 parent = node.parent
                 parent.prune_child(node)
 
@@ -258,7 +261,7 @@ class TreeVisualizer:
 
         if num_parents and not subtree_rooted_at.is_root():
             result.append((Airport(str(subtree_rooted_at.parent.data)), current_airport))
-            result.extend(TreeVisualizer.collect_connections(subtree_rooted_at, num_children=0,
+            result.extend(TreeVisualizer.collect_connections(subtree_rooted_at.parent, num_children=0,
                                                              num_parents=num_parents-1))
 
         return result
@@ -367,7 +370,8 @@ class TreeVisualizer:
         ----------
         matplotlib object LineCollection
         """
-        # TODO color parameter
+        names = set()
+
         for src, dest in connections:
             if (
                     not continents or (
@@ -382,7 +386,8 @@ class TreeVisualizer:
                 else:
                     lc = None
                     ax.plot([src.x, dest.x], [src.y, dest.y], "-", color=TreeVisualizer.get_color(label=src.name),
-                            zorder=2)
+                            zorder=2, linewidth=1)
+                    names.add(src.name)
 
         ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o", markersize=3, zorder=4)
         return lc
@@ -400,11 +405,10 @@ class TreeVisualizer:
         ----------
         str
         """
-        d = {'MEX': "orange", 'ORD': "pink", 'CUN': "darkgreen", 'VER': "yellow", 'ZCL': "lightblue"}
+        d = {'MEX': "orange", 'ORD': "fuchsia", 'CUN': "darkgreen", 'VER': "yellow", 'ZCL': "cyan"}
         if label not in d.keys():
-            return "blue"
+            return "deepskyblue"
         else:
-            print(label, d[label])
             return d[label]
 
 
