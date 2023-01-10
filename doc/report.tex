@@ -57,12 +57,22 @@ problem \cite{sankoffMinimalMutationTrees1975}.
 
 Sankoff's algorithm is designed to use an already existing phylogenetic tree with labeled leaves and
 some form of cost matrix to label the internal nodes in a way that minimizes the cost based on the
-matrix and underlying leaves. For this the algorithm uses two phases a forward and a backward pass.
-The forward pass fills for every node a list detailing what choosing a certain label would incur in
-cost. It starts with the internal nodes just above the leaves and ends with the root. This is the
-more calculation intensive part of the algorithm. The second part is the backward pass. It starts at
-the root and ends with the internal nodes above the leaves. Its task is to choose the correct label
-based on the cost lists. This results in the labeled tree.
+matrix and underlying topology. For this the algorithm uses two phases: a
+forward pass and a backward pass.
+Starting with the parents of the leaves, the forward pass fills for every node a
+list detailing what choosing a certain label would incur in
+cost. For this, the cost for the transition from each possible state of the
+parent to each possible state of the children must be calculated, which has an
+estimated complexity of $\mathcal{O}(k^2)$ where $k$ is the number of possible
+states. This calculation has to be done for each node in the tree, thus we
+estimate the runtime of the forward pass
+with $\mathcal{O}(nk^2)$ where $n$ is the number of nodes in the tree and $k$ is
+the number of possible states each node can take.
+The second part is the backward pass. Starting with the root, the algorithm
+choses the correct label based on the cost lists. This results in the labeled
+tree. For this, each node has to be visited once, hence, we estimate the
+complexity of the backward pass with $\mathcal{O}(nk)$ where $n$ is the number of
+nodes in the tree and $k$ is the number of states each node can take.
 
 The Sankoff algorithm is usually applied to the broader scope of
 inferring phylogenetic trees using cost matrices that model the transition
@@ -108,14 +118,21 @@ In the following report, we implement the method outlined in
 by using the original data.
 
 \section{Material and Methods}
-The Sankoff algorithm was implemented using the Python
+The Sankoff algorithm was implemented using the Python \todo{version number}
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
 efficient matrix operations.
 
 All visualizations (with the exception of visualizations from the original paper)\todo{Do we need
 this?} were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
 airports Geopandas \cite{GeoPandas12GeoPandas} was used. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
-airpots and pycountry \cite{theunePycountryISOCountry} to translate letter codes of countries.
+airpots and pycountry \cite{theunePycountryISOCountry} to translate letter codes
+of countries.
+
+To compare our implementation in terms of runtime with the implementation that
+was provided in \cite{reimeringPhylogeographicReconstructionUsing2020}, we
+executed the Sankoff implementation using the built-in command \texttt{time} on
+a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(TM) i5-
+10210U CPU @ 1.60GHz CPU and 16G RAM for the geographic distance matrix for airports.
 
 \section{Results}
 
@@ -142,6 +159,13 @@ The Fr\'{e}chet distance between our trees:
     \item effective country vs geographic country: 12307.03
     \item airport to country comparison not possible due to distance matrix
 \end{itemize}
+
+\subsection{Runtime}
+Our implementation of the Sankoff algorithm using the geographic distance
+matrix for airports took \texttt{2m39.466s}, while the implementation provided in
+\cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
+Our implementation is more than twice as fast for the $3865 \times 3865$
+distance matrix than than the original implementation.
 
 
 \section{Discussion}
