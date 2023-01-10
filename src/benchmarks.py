@@ -1,8 +1,4 @@
-from tree_visualizer import TreeVisualizer
-from matplotlib import pyplot as plt
 from sankoff import Sankoff
-from newick_parser import NewickParser
-import numpy as np
 import airportsdata
 import os
 
@@ -71,6 +67,7 @@ def main() -> None:
         variant_matrix_name, _, variant_mapper = variants[0]
         sankoff = Sankoff(newick_string, os.path.join(cwd, "data", variant_matrix_name), variant_mapper.data)
         sankoff.perform_sankoff()
+
 
 if __name__ == '__main__':
     main()
