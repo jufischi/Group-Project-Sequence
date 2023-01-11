@@ -59,9 +59,9 @@ Sankoff's algorithm is designed to use an already existing phylogenetic tree wit
 some form of cost matrix to label the internal nodes in a way that minimizes the cost based on the
 matrix and underlying topology. For this the algorithm uses two phases: a
 forward pass and a backward pass.
-Starting with the parents of the leaves, the forward pass fills for every node a
+Starting with the parents of the leaves, the forward pass fills a
 list detailing what choosing a certain label would incur in
-cost. For this, the cost for the transition from each possible state of the
+cost for every node. For this, the cost for the transition from each possible state of the
 parent to each possible state of the children must be calculated, which has an
 estimated complexity of $\mathcal{O}(k^2)$ where $k$ is the number of possible
 states. This calculation has to be done for each node in the tree, thus we
@@ -70,7 +70,7 @@ with $\mathcal{O}(nk^2)$ where $n$ is the number of nodes in the tree and $k$ is
 the number of possible states each node can take.
 The second part is the backward pass. Starting with the root, the algorithm
 choses the correct label based on the cost lists. This results in the labeled
-tree. For this, each node has to be visited once, hence, we estimate the
+tree. For this, each node has to be visited once. Hence, we estimate the
 complexity of the backward pass with $\mathcal{O}(nk)$ where $n$ is the number of
 nodes in the tree and $k$ is the number of states each node can take.
 
@@ -94,23 +94,23 @@ location. Then, three different cost matrices are utilized:
   \item Equal distance: Airports have a distance of 1 to each other
   \item Geographic distance: The actual geographic distances between different
   airports is used.
-  \item Effective distances: A infection is more likely to spread from
+  \item Effective distances: An infection is more likely to spread from
   airport $A$ to airport $B$ if there are many people traveling from $A$ to
   $B$. Thus, the effective distances are calculated by using passenger data
   for each combination of airports.
 \end{enumerate}
 
 Using those cost matrices for airports and for the corresponding countries, the
-labels for the internal nodes of the tree are calculated and thus their
+labels for the internal nodes of the tree are calculated and, thus, their
 geographic position.
 
 One of the advantages in using the Sankoff algorithm for this problem as opposed to more
-conventional approaches is, as the authors describe a gain in performance. This is due to the fact
+conventional approaches is, as the authors describe, a gain in performance. This is due to the fact
 that the Sankoff algorithm is comparatively simple. Additionally, large parts can be implemented as
 operations on matrices which can be done very quick in modern computers because of easy
 parallelization and efficient libraries, such as BLAS \cite{lawsonBasicLinearAlgebra1979}. As
 datasets can be quite large due to a large
-amount of locations (in this case airports) and sequences having a fast
+amount of sequences and locations (in this case airports) having a fast
 algorithm to even approximate the correct solution can be instrumental in getting a solution.
 
 In the following report, we implement the method outlined in
@@ -118,21 +118,23 @@ In the following report, we implement the method outlined in
 by using the original data.
 
 \section{Material and Methods}
-The Sankoff algorithm was implemented using the Python \todo{version number}
+The Sankoff algorithm was implemented using Python \todo{version number}
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
 efficient matrix operations.
 
 All visualizations (with the exception of visualizations from the original paper)\todo{Do we need
 this?} were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
-airports Geopandas \cite{GeoPandas12GeoPandas} was used. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
-airpots and pycountry \cite{theunePycountryISOCountry} to translate letter codes
+airports we used Geopandas \cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
+airports and pycountry \cite{theunePycountryISOCountry} to translate letter codes
 of countries.
 
-To compare our implementation in terms of runtime with the implementation that
-was provided in \cite{reimeringPhylogeographicReconstructionUsing2020}, we
+To compare our implementation with the implementation that
+was provided in \cite{reimeringPhylogeographicReconstructionUsing2020} in terms of runtime, we
 executed the Sankoff implementation using the built-in command \texttt{time} on
 a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(TM) i5-
 10210U CPU @ 1.60GHz CPU and 16G RAM for the geographic distance matrix for airports.
+
+We calculated Fr\'{e}chet distances as a measure of comparing our results to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculation we used the implementation provided by the authors \cite{reimeringFrechetTreeDistance2018}.
 
 \section{Results}
 
@@ -144,7 +146,6 @@ a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(T
     \item We compare our reconstructed trees with the ones from the paper
     \item by claculating discrete Fr\'{e}chet tree distances using geographic distances between locations
     \item method compares the paths of locations from the root of each leaf node, calculates discrete Fr\'{e}chet distances between them and corrects the distance for each node by the number of paths
-    \item we use Rscript from the authors for calculation \cite{reimeringFrechetTreeDistance2018}
 \end{itemize}
 
 Our inferred trees versus the trees from the paper:
@@ -165,7 +166,7 @@ Our implementation of the Sankoff algorithm using the geographic distance
 matrix for airports took \texttt{2m39.466s}, while the implementation provided in
 \cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
 Our implementation is more than twice as fast for the $3865 \times 3865$
-distance matrix than than the original implementation.
+distance matrix than the original implementation.
 
 
 \section{Discussion}
