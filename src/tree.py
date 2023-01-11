@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 
 
 class Node:
@@ -35,9 +36,14 @@ class Node:
     get_leaves()
         returns a list of all leaf nodes that are located below the node
     get_root()
-        returns the root located above the given node.
+        returns the root located above the given node
     copy_tree()
-        returns a deep copy of the tree starting from the given node.
+        returns a deep copy of the tree starting from the given node
+    compute_hotspots()
+        returns a dictionary containing the number of outgoing flights from each location
+    get_hotspots()
+        returns a String containing the locations with outgoing flights as well as their number of outgoing flights to
+        other locations in a comma-separated format
     """
     def __init__(self, data, parent=None, edge_length_to_parent=None):
         """
@@ -261,6 +267,60 @@ class Node:
             recursion(tree_copy, child)
         return tree_copy
 
+    def compute_hotspots(self):
+        """
+        Returns a dictionary containing the locations as keys and the number of outgoing flights from each location
+        as values. Resulting dictionaries contains all locations with outgoing edges (i.e. children). For counting the
+        number of outgoing flights only those children are considered that have a different label. Thus, locations that
+        only have outgoing edges to nodes with the same label get assigned value 0.
+
+        Returns
+        -------
+        hot_spots : dict
+            the number of outgoing flights from each location
+        """
+        hot_spots = {}
+
+        if not self.is_leaf():
+            data = str(self.data)
+            if data in hot_spots.keys():
+                hot_spots[data] += len([x for x in self.children if str(x.data) != data])
+            else:
+                hot_spots[data] = len([x for x in self.children if str(x.data) != data])
+
+        for child in self.children:
+            temp_hot_spots = child.compute_hotspots()
+            hot_spots = {x: temp_hot_spots.get(x, 0) + hot_spots.get(x, 0)
+                         for x in set(hot_spots).union(temp_hot_spots)}
+
+        return hot_spots
+
+    def get_hotspots(self):
+        """
+        Returns a String containing the locations with outgoing flights as well as their number of outgoing flights to
+        other locations in a comma-separated format. The locations are sorted in descending order of their number of
+        outgoing flights.
+
+        Returns
+        -------
+        hot_spots : String
+            the number of outgoing flights from each location in descending order
+        """
+        temp_hotspots = self.compute_hotspots()
+
+        # sorting the dictionary by descending values:
+        keys = list(temp_hotspots.keys())
+        values = list(temp_hotspots.values())
+        sorted_val_index = np.argsort(values)
+        temp_hotspots = {keys[i]: values[i] for i in sorted_val_index[::-1]}
+
+        # converting into String
+        hot_spots = "location,no. of outgoing flights\n"
+        for key, value in temp_hotspots.items():
+            hot_spots += key + "," + str(value) + "\n"
+
+        return hot_spots
+
 
 class TestNode(unittest.TestCase):
     """
@@ -354,6 +414,23 @@ class TestNode(unittest.TestCase):
         root_copy.children[2].data = 7
         self.assertNotEqual(internal_node.data, root_copy.children[2].data)
 
+    def test_compute_hotspots(self):
+        root = Node(1)
+        root.add_child(2)
+        root.add_child(3)
+        internal_node = Node(4)
+        internal_node.add_child(5)
+        internal_node.add_child(6)
+        root.add_child_node(internal_node)
+        internal_node.add_child(4)
+        internal_node.children[2].add_child(7)
+        root.children[1].add_child(4)
+        root.children[1].children[0].add_child(8)
+        hot_spots = root.compute_hotspots()
+        self.assertEqual(hot_spots['1'], 3)
+        self.assertEqual(hot_spots['4'], 4)
+        self.assertNotIn('2', hot_spots)
+
 
 class TreeLabel:
     """
@@ -381,12 +458,4 @@ class TreeLabel:
 
 
 if __name__ == '__main__':
-    root = Node(TreeLabel(1, 7, None, None))
-    root.add_child(TreeLabel(2, 8, None, None))
-    root.add_child(TreeLabel(3, 9, None, None))
-    internal_node = Node(TreeLabel(4, 10, None, None))
-    internal_node.add_child(TreeLabel(5, 11, None, None))
-    internal_node.add_child(TreeLabel(6, 12, None, None))
-    root.add_child_node(internal_node)
-    print(root.get_annotation())
     unittest.main()
