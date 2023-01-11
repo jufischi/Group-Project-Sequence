@@ -1,7 +1,4 @@
-from tree_visualizer import TreeVisualizer
-from matplotlib import pyplot as plt
 from sankoff import Sankoff
-from newick_parser import NewickParser
 import airportsdata
 import os
 
@@ -67,35 +64,9 @@ def main() -> None:
             ("effective.distance.matrix.country.csv", "country_effective", country_mapper)
         ]
 
-        for variant_matrix_name, variant_name, variant_mapper in variants:
-            print(f"current variant: {variant_name}")
-            variant_file_path = os.path.join(cwd, "data", f"{variant_name}.txt")
-            variant_tree = None
-            if os.path.exists(variant_file_path):
-                print(f"variant file {variant_file_path} found, reusing...")
-                with open(variant_file_path, "r") as variant_file:
-                    variant_newick = variant_file.readlines()[0]
-                    parser = NewickParser(variant_newick)
-                    parser.parse()
-                    variant_tree = parser.root
-            else:
-                print(f"variant file {variant_file_path} not found, performing Sankoff...")
-                sankoff = Sankoff(newick_string, os.path.join(cwd, "data", variant_matrix_name), variant_mapper.data)
-                sankoff.perform_sankoff()
-                with open(variant_file_path, "w") as variant_file:
-                    variant_file.writelines(sankoff.tree.get_newick())
-                variant_tree = sankoff.tree
-
-                # Generate files containing annotation
-                variant_annotation_file_path = os.path.join(cwd, "data", f"{variant_name}.annotation.txt")
-                with open(variant_annotation_file_path, "w") as variant_annotation:
-                    variant_annotation.writelines(variant_tree.get_annotation())
-
-            fig, ax = plt.subplots()
-            plt.title(variant_name)
-            TreeVisualizer.draw_path_to_root(variant_tree, 'DEU', fig, ax)
-            # TreeVisualizer.draw_tree(variant_tree, fig, ax, [])
-            plt.show()
+        variant_matrix_name, _, variant_mapper = variants[0]
+        sankoff = Sankoff(newick_string, os.path.join(cwd, "data", variant_matrix_name), variant_mapper.data)
+        sankoff.perform_sankoff()
 
 
 if __name__ == '__main__':
