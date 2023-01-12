@@ -1,0 +1,5 @@
+airportsdata==20221121
+geopandas==0.12.2
+matplotlib==3.6.3
+numpy==1.24.1
+pycountry==22.3.5
