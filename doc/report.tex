@@ -122,6 +122,11 @@ The Sankoff algorithm was implemented using Python \todo{version number}
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
 efficient matrix operations.
 
+The base phylogenetic tree that we used is the H1N1 phylogeny described by
+\cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculations,
+we've used the effective and geographic distance matrices from
+\cite{reimeringDistanceMatricesParsimonious2019}. 
+
 All visualizations (with the exception of visualizations from the original paper)\todo{Do we need
 this?} were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
 airports we used Geopandas \cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
@@ -138,7 +143,19 @@ We calculated Fr\'{e}chet distances as a measure of comparing our results to the
 
 \section{Results}
 
+\subsection{Labeled trees}
+For the given input phylogeny, we've computed four different internal labelings: 
+\begin{itemize}
+    \item one based on the geographic distances between airports
+    \item one based on the effective distances between airports
+    \item one based on the geographic distances between countries
+    \item one based on the effective distances between countries
+\end{itemize}
 
+Our tree that is based on the geographic distances between airports differs in
+one node from the corresponding tree given in
+\cite{reimeringPhylogeographicReconstructionUsing2020}, the trees that are based
+on the effective geographic distances between airports are equal.
 
 \subsection{Fr\'{e}chet distances}
 \begin{itemize}
@@ -170,6 +187,47 @@ distance matrix than the original implementation.
 
 
 \section{Discussion}
+The Sankoff algorithm is rather easy to understand and can even be computed by
+hand if the distance matrix and the tree are small. Also, for a given tree
+topology, we've demonstrated that the computation of the labels of the internal
+nodes is fast even for huge distance matrices such as the geographic and
+effective distance matrices with $3865 \times 3865$ entries.
+
+The tree that our implementation computed for the geographic airport matrices
+differs in one label from the H1N1 tree given by
+\cite{reimeringPhylogeographicReconstructionUsing2020}, i.e. we label the node
+\texttt{intNode97} with \texttt{DTW} (Detroit Metro Airport) while they find the label
+\texttt{IND} (Indianapolis International Airport).
+This difference is the result of different prioritization in the implementation:
+\texttt{intNode97} is the parent of three leaves, two of them labeled with
+\texttt{DTW} and the third is labeled with \texttt{IND}. The parent of
+\texttt{intNode97} is \texttt{intNode96} and has one additional child which is
+also a leaf labeled with \texttt{IND}. The distance between \texttt{IND}
+and \texttt{DTW} is $371.54$. Choosing either \texttt{IND} or \texttt{DTW} for
+\texttt{intNode97} yields the same cost for choosing \texttt{IND} for
+\texttt{intNode96}. Thus, from the perspective of maximum parsimony, both
+choices are optimal. Moreover, the real-world implications of this concrete
+difference should be small. Indianapolis and Detroit are cities that are close
+to each other and as the sampling locations for the leaves are mapped to the
+closest airport, there is already a certain amount of distortion
+\todo{fuzziness? noise?} in the input data that has a comparable magnitude to
+the difference between Indianapolis and Detroit.
+
+Due to its fast computation, the Sankoff implementation enables rapid
+experiments to plot the spread on the globe and to accelerate the discovery 
+of the origin of a disease
+(Figure~\ref{fig:world}). While the algorithmic inference of the origin must be
+treated with caution, as it is not precise
+\cite{reimeringPhylogeographicReconstructionUsing2020}, it is also worth noting
+that in the case of global pandemics, the determination of the origin of the
+disease can have undesired, societal implications if not treated with caution
+\cite{chenPotentialImpactCOVID192020}.
+
+If one is interested in how the disease was imported into a specific country or
+region, the information that can be extracted from the labeling given by Sankoff
+is limited: There might be many incoming routes to one airport or country. However,
+the computed tree does not give any historical ordering, i.e. it does not
+indicate which connection was first (Figure~\ref{fig:DEU0}).
 
 \begin{figure}[!ht]
     \centering
@@ -187,8 +245,7 @@ distance matrix than the original implementation.
 
 
 \bibliographystyle{unsrt}  
-\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
-%%% and comment out the ``thebibliography'' section.
+\bibliography{references}  
 
 \end{document}
 
