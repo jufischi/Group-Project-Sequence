@@ -2,6 +2,7 @@ from tree_visualizer import TreeVisualizer
 from matplotlib import pyplot as plt
 from sankoff import Sankoff
 from newick_parser import NewickParser
+import matplotlib as mpl
 import airportsdata
 import os
 
@@ -91,10 +92,17 @@ def main() -> None:
                 with open(variant_annotation_file_path, "w") as variant_annotation:
                     variant_annotation.writelines(variant_tree.get_annotation())
 
+            mpl.rcParams['font.family'] = 'Times New Roman'
             fig, ax = plt.subplots()
-            plt.title(variant_name)
-            TreeVisualizer.draw_path_to_root(variant_tree, 'DEU', fig, ax)
-            # TreeVisualizer.draw_tree(variant_tree, fig, ax, [])
+            TreeVisualizer.draw_tree(variant_tree, ax)
+
+            fig.subplots_adjust(bottom=0.1)
+            norm = mpl.colors.Normalize(-100 / 2, 100)
+            cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap="Reds"), cax=plt.axes([0.25, 0.2, 0.5, 0.025]),
+                                orientation='horizontal')
+            cbar.ax.get_xaxis().set_ticks([-100 / 2, 100], labels=["src", "dest"])
+            cbar.outline.set_visible(False)
+
             plt.show()
 
 

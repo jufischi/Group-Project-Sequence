@@ -6,7 +6,6 @@ from matplotlib.collections import LineCollection
 import numpy as np
 from tree import Node
 import pycountry
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 country_airports = {
     "US": "LAX",
@@ -96,15 +95,28 @@ class TreeVisualizer:
         Draws the tree represented by its root node on the given
         matplotlib.pyplot Axis. This will produce a vector based world map with
         the tree plotted onto it.
-    draw_path_to_root(root: Node, label: str, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [],
+    draw_path_to_root(root: Node, label: str, ax: plt.Axes, continent_list: List[str] = [],
                           every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100)
         Prunes the given tree to only contain all paths from a given label to the root.
         Then calls upon the draw_tree() function to draw the pruned tree.
     collect_connections(subtree_rooted_at Node)
         Traverses the tree recursively starting on the given node and returns
         all edges of that tree as a list of tuples of two airports.
+    create_line_collection(src: Airport, dest: Airport, n: int = 100)
+        Creates a LineCollection object, which represents a directed dotted line between two Airports.
+    plot_country_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
+                                 world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = [],
+                                 n: int = 100)
+        Draws connections between Airports. The location of each airport is centered in the corresponding country.
+        All connections within one country are therefore not visible.
+    plot_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
+                         world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = [],
+                         n: int = 100, color: str = "red")
+        Draws every connections between two Airports.
+    get_color(label: str)
+        Returns a specific color for different airports.
     """
-    def draw_tree(root: Node, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [], every: bool = True,
+    def draw_tree(root: Node, ax: plt.Axes, continent_list: List[str] = [], every: bool = True,
                   num_children: float = np.inf, num_parents: int = 0, n: int = 100, color: str = "red") -> None:
         """
         Draws the tree represented by its root node on the given
@@ -117,8 +129,6 @@ class TreeVisualizer:
         ----------
         root: Node
             The root of the tree to display on the world map
-        fig: pyplot.Figure
-            Figure containing all subfigures
         ax: pyplot.Axes
             The subfigure in which the tree should be displayed
         continent_list: List[str]
@@ -136,6 +146,7 @@ class TreeVisualizer:
         color: str
             optional, determines color of arrow between two locations
         """
+
         world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
 
         connections = TreeVisualizer.collect_connections(root, num_children, num_parents)
@@ -153,7 +164,7 @@ class TreeVisualizer:
                                                                                           linewidth=0.2)
 
         if every:
-            lc = TreeVisualizer.plot_connections(connections, ax, world, continent_list, color=color)
+            TreeVisualizer.plot_connections(connections, ax, world, continent_list, color=color)
         else:
             for src, dest in connections:
                 try:
@@ -163,15 +174,10 @@ class TreeVisualizer:
                     dest.y = world[world.iso_a3 == dest.country].centroid.y.item()
                 except Exception:
                     continue
-            lc = TreeVisualizer.plot_country_connections(connections, ax, world, continent_list)
+            TreeVisualizer.plot_country_connections(connections, ax, world, continent_list)
+        ax.set_axis_off()
 
-        if lc is not None:
-            divider = make_axes_locatable(ax)
-            cax = divider.append_axes("right", size="4%", pad=0.04)
-            cbar = fig.colorbar(lc, ax=ax, cax=cax)
-            cbar.ax.get_yaxis().set_ticks([-n / 2, n], labels=["src", "dest"])
-
-    def draw_path_to_root(root: Node, label: str, fig: plt.Figure, ax: plt.Axes, continent_list: List[str] = [],
+    def draw_path_to_root(root: Node, label: str, ax: plt.Axes, continent_list: List[str] = [],
                           every: bool = True, num_children: float = np.inf, num_parents: int = 0, n: int = 100,
                           color: str = "red"):
         """
@@ -184,8 +190,6 @@ class TreeVisualizer:
             The root of the tree to display on the world map
         label: String
             label of nodes for which we want the pruned subtree
-        fig: pyplot.Figure
-            Figure containing all subfigures
         ax: pyplot.Axes
             The subfigure in which the tree should be displayed
         continent_list: List[str]
@@ -223,7 +227,7 @@ class TreeVisualizer:
         root_copy = root.copy_tree()  # create copy of the tree to not destroy the original tree
         prune_tree(root_copy, label)  # prune tree
         # run visualizer using pruned tree:
-        TreeVisualizer.draw_tree(root_copy, fig, ax, continent_list, every, num_children, num_parents, n, color)
+        TreeVisualizer.draw_tree(root_copy, ax, continent_list, every, num_children, num_parents, n, color)
 
     def collect_connections(subtree_rooted_at: Node, num_children: float = np.inf, num_parents: int = 0) \
             -> List[Tuple[Airport, Airport]]:
@@ -268,7 +272,7 @@ class TreeVisualizer:
 
     def create_line_collection(src: Airport, dest: Airport, n: int = 100) -> LineCollection:
         """
-        Creates a LineCollection object, which represents a directed dotted line between two Airports
+        Creates a LineCollection object, which represents a directed dotted line between two Airports.
 
         Parameters
         ----------
@@ -298,7 +302,7 @@ class TreeVisualizer:
 
     def plot_country_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
                                  world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = [],
-                                 n: int = 100) -> LineCollection:
+                                 n: int = 100) -> None:
         """
         Draws connections between Airports. The location of each airport is centered in the corresponding country.
         All connections within one country are therefore not visible.
@@ -339,14 +343,12 @@ class TreeVisualizer:
                     ax.add_collection(lc)
                 else:
                     continue
-        return lc
 
     def plot_connections(connections: List[Tuple[Airport, Airport]], ax: plt.Axes,
                          world: geopandas.geodataframe.GeoDataFrame, continents: List[str] = [],
-                         n: int = 100, color: str = "red") -> LineCollection:
+                         n: int = 100, color: str = "red") -> None:
         """
-        Draws connections between Airports. The location of each airport is centered in the corresponding country.
-        All connections within one country are therefore not visible.
+        Draws every connections between two Airports.
 
         As an example, the airport MUC (Munich) will be displayed in the center of Germany.
 
@@ -364,7 +366,7 @@ class TreeVisualizer:
         n: int
             optional, number of drawn points for each line
         color: str
-            optional, determines color of arrow between two locations
+            optional, determines airport color
 
         Returns
         ----------
@@ -390,7 +392,6 @@ class TreeVisualizer:
                     names.add(src.name)
 
         ax.plot(connections[0][0].x, connections[0][0].y, color="maroon", marker="o", markersize=3, zorder=4)
-        return lc
 
     def get_color(label: str) -> str:
         """
@@ -402,7 +403,7 @@ class TreeVisualizer:
             Label of Airports
 
         Returns
-        ----------
+        -------
         str
         """
         d = {'MEX': "orange", 'ORD': "fuchsia", 'CUN': "darkgreen", 'VER': "yellow", 'ZCL': "cyan"}
@@ -423,5 +424,5 @@ class TestVisualizer:
         root.children[1].add_child("CHS")
 
         fig, ax = plt.subplots()
-        TreeVisualizer.draw_tree(root.children[1], fig, ax, [], False, num_children=10, num_parents=10)
+        TreeVisualizer.draw_tree(root.children[1], ax, [], False, num_children=10, num_parents=10)
         plt.show()
