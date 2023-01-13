@@ -122,6 +122,11 @@ The Sankoff algorithm was implemented using Python \todo{version number}
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
 efficient matrix operations.
 
+The base phylogenetic tree that we used is the H1N1 phylogeny described by
+\cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculations,
+we've used the effective and geographic distance matrices from
+\cite{reimeringDistanceMatricesParsimonious2019}. 
+
 All visualizations (with the exception of visualizations from the original paper)\todo{Do we need
 this?} were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
 airports we used Geopandas \cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
@@ -138,7 +143,19 @@ We calculated Fr\'{e}chet distances as a measure of comparing our results to the
 
 \section{Results}
 
+\subsection{Labeled trees}
+For the given input phylogeny, we've computed four different internal labelings: 
+\begin{itemize}
+    \item one based on the geographic distances between airports
+    \item one based on the effective distances between airports
+    \item one based on the geographic distances between countries
+    \item one based on the effective distances between countries
+\end{itemize}
 
+Our tree that is based on the geographic distances between airports differs in
+one node from the corresponding tree given in
+\cite{reimeringPhylogeographicReconstructionUsing2020}, the trees that are based
+on the effective geographic distances between airports are equal.
 
 \subsection{Fr\'{e}chet distances}
 \begin{itemize}
