@@ -42,6 +42,7 @@ def main() -> None:
                                 orientation='horizontal')
             cbar.ax.get_xaxis().set_ticks([-100 / 2, 100], labels=["src", "dest"])
             cbar.outline.set_visible(False)
+            plt.tight_layout()
 
             plt.savefig(os.path.join(cwd, "doc", variant_name + "_country.pdf"), dpi=150)
             plt.show()
