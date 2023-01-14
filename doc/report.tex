@@ -118,7 +118,7 @@ In the following report, we implement the method outlined in
 by using the original data.
 
 \section{Material and Methods}
-The Sankoff algorithm was implemented using Python \todo{version number}
+The Sankoff algorithm was implemented using Python 3.10
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
 efficient matrix operations.
 
@@ -127,8 +127,7 @@ The base phylogenetic tree that we used is the H1N1 phylogeny described by
 we've used the effective and geographic distance matrices from
 \cite{reimeringDistanceMatricesParsimonious2019}. 
 
-All visualizations (with the exception of visualizations from the original paper)\todo{Do we need
-this?} were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
+All visualizations were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
 airports we used Geopandas \cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
 airports and pycountry \cite{theunePycountryISOCountry} to translate letter codes
 of countries.
@@ -221,12 +220,17 @@ difference should be small. Indianapolis and Detroit are cities that are close
 to each other and as the sampling locations for the leaves are mapped to the
 closest airport, there is already a certain amount of distortion
 \todo{fuzziness? noise?} in the input data that has a comparable magnitude to
-the difference between Indianapolis and Detroit.
+the difference between Indianapolis and Detroit.\todo{How do we know the magnitude of
+noise in the input data?}
 
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery 
 of the origin of a disease
-(Figure~\ref{fig:world}). While the algorithmic inference of the origin must be
+(Figure~\ref{fig:world}). In comparsion with an algorithm needing much more time,
+this can also be done incrementally, allowing the current predictions to be
+updated with new arrivals of data. This can be particularly useful in the first stages
+of an pandemic when new data migh arrive very quickly to challenge the current
+estimations. While the algorithmic inference of the origin must be
 treated with caution, as it is not precise
 \cite{reimeringPhylogeographicReconstructionUsing2020}, it is also worth noting
 that in the case of global pandemics, the determination of the origin of the
@@ -237,7 +241,9 @@ If one is interested in how the disease was imported into a specific country or
 region, the information that can be extracted from the labeling given by Sankoff
 is limited: There might be many incoming routes to one airport or country. However,
 the computed tree does not give any historical ordering, i.e. it does not
-indicate which connection was first (Figure~\ref{fig:Europe}).
+indicate which connection was first (Figure~\ref{fig:Europe}).\todo{Shouldn't
+this dependend on the tree? E.g. time prediction is possible with a tree 
+given by UPGMA?}
 
 \begin{figure}[!ht]
     \centering
