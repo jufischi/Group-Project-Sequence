@@ -132,13 +132,13 @@ airports we used Geopandas \cite{GeoPandas12GeoPandas}. Additionally, we used th
 airports and pycountry \cite{theunePycountryISOCountry} to translate letter codes
 of countries.
 
+We calculated Fr\'{e}chet distances as a measure of comparing our results to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. Fr\'{e}chet tree distances can be used to compare phylogeographic trees that are inferred from the same taxa. This is done by comparing the paths of locations that lead from every leaf node to the root, calculating their discrete Fr\'{e}chet distance and correcting this distance by the number of paths leading through each node. For this computation the geographic distances are used \cite{reimeringFrechetTreeDistance2018}. We used the implementation provided in \cite{reimeringFrechetTreeDistance2018} for the calculation.
+
 To compare our implementation with the implementation that
 was provided in \cite{reimeringPhylogeographicReconstructionUsing2020} in terms of runtime, we
 executed the Sankoff implementation using the built-in command \texttt{time} on
 a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(TM) i5-
 10210U CPU @ 1.60GHz CPU and 16G RAM for the geographic distance matrix for airports.
-
-We calculated Fr\'{e}chet distances as a measure of comparing our results to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculation we used the implementation provided by the authors \cite{reimeringFrechetTreeDistance2018}.
 
 \section{Results}
 
@@ -157,20 +157,13 @@ one node from the corresponding tree given in
 on the effective geographic distances between airports are equal.
 
 \subsection{Fr\'{e}chet distances}
-\begin{itemize}
-    \item Fr\'{e}chet tree distances used to quantify geographic differences between spread paths
-    \item We compare our reconstructed trees with the ones from the paper
-    \item by calculating discrete Fr\'{e}chet tree distances using geographic distances between locations
-    \item method compares the paths of locations from the root of each leaf node, calculates discrete Fr\'{e}chet distances between them and corrects the distance for each node by the number of paths
-\end{itemize}
-
-Our inferred trees versus the trees from the paper:
+The Fr\'{e}chet tree distances for our trees using airport data compared to the trees from \cite{reimeringPhylogeographicReconstructionUsing2020} are as follows:
 \begin{itemize}
     \item geographic distances: 123.8497
     \item effective distances: 0
 \end{itemize}
 
-The Fr\'{e}chet distance between our trees:
+Further, we calculated the distances between the trees we calculated using effective and geographic distances
 \begin{itemize}
     \item effective airport vs geographic airport: 65149
     \item effective country vs geographic country: 12307.03
@@ -191,8 +184,81 @@ distance matrix than the original implementation.
     \item MEX - USA - EU
     \item mostly via USA
     \item countries wise effective and geographical pretty similar
-    \item airport more possible connections then country
+    \item airport more possible connections than country
 \end{itemize}
+
+\subsection{Hot-spots}
+From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most, of the spread of the 2009 H1N1 can be inferred. Table \ref{tab: hotspots airport effective} shows the top 11 \todo{show less? maybe 6} hot spots when we reconstruct the tree using effective airport data. \todo{wright more about other tables (if we use this at all)}
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c}
+location & no. of outgoing flights \\
+\hline
+JFK      & 31                      \\
+PHX      & 26                      \\
+LAX      & 21                      \\
+IAH      & 13                      \\
+PHL      & 11                      \\
+MEX      & 11                      \\
+CUN      & 6                       \\
+DEN      & 6                       \\
+ILG      & 5                       \\
+DFW      & 5                       \\
+IND      & 5                                   
+\end{tabular}
+\caption{Top 11 hot-spots of the reconstructed tree using effective airport data.}
+\label{tab: hotspots airport effective}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c}
+location & no. of outgoing flights \\
+\hline
+COS      & 31                      \\
+JFK      & 26                      \\
+MEX      & 12                      \\
+JBR      & 11                      \\
+PHL      & 9                       \\
+DFW      & 9                       \\
+LAX      & 8                       \\
+IND      & 7                       \\
+MDT      & 6                       \\
+ELD      & 6                       \\
+DEN      & 6                                  
+\end{tabular}
+\caption{Top 11 hot-spots of the reconstructed tree using geographic airport data.}
+\label{tab: hotspots airport geographic}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c}
+location & no. of outgoing flights \\
+\hline
+US       & 41                      \\
+MX       & 32                      \\
+ES       & 2                       \\
+CA       & 1                                      
+\end{tabular}
+\caption{4 hot-spots of the reconstructed tree using effective country data.}
+\label{tab: hotspots country effective}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c}
+location & no. of outgoing flights \\
+\hline
+US       & 54                      \\
+MX       & 13                      \\
+ES       & 2                       \\
+CA       & 1                       
+\end{tabular}
+\caption{4 hot-spots of the reconstructed tree using geographic country data.}
+\label{tab: hotspots country geographic}
+\end{table}
+
 
 
 \section{Discussion}
