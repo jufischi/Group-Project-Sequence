@@ -335,9 +335,8 @@ class TreeVisualizer:
                     world[world.iso_a3 == dest.country].continent.isin(continents).all()
                     )
             ):
-                if (src.country not in countries or dest.country not in countries) and src.country != dest.country:
-                    countries.add(src.country)
-                    countries.add(dest.country)
+                if (frozenset([src.country, dest.country]) not in countries) and src.country != dest.country:
+                    countries.add(frozenset([src.country, dest.country]))
                     ax.plot([src.x, dest.x], [src.y, dest.y], " ", color="red", marker="o", markersize=3, zorder=3)
                     lc = TreeVisualizer.create_line_collection(src, dest, n)
                     ax.add_collection(lc)
