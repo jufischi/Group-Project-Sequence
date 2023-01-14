@@ -32,7 +32,7 @@
   Michael Mederer \\
   Universität Tübingen \\
   \texttt{michael.mederer@student.uni-tuebingen.de} \\
-  XXXXXXX \\
+  6120487 \\
   \And 
   Felix Seidel \\
   Universität Tübingen \\
@@ -161,7 +161,7 @@ on the effective geographic distances between airports are equal.
 \begin{itemize}
     \item Fr\'{e}chet tree distances used to quantify geographic differences between spread paths
     \item We compare our reconstructed trees with the ones from the paper
-    \item by claculating discrete Fr\'{e}chet tree distances using geographic distances between locations
+    \item by calculating discrete Fr\'{e}chet tree distances using geographic distances between locations
     \item method compares the paths of locations from the root of each leaf node, calculates discrete Fr\'{e}chet distances between them and corrects the distance for each node by the number of paths
 \end{itemize}
 
@@ -184,6 +184,16 @@ matrix for airports took \texttt{2m39.466s}, while the implementation provided i
 \cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
 Our implementation is more than twice as fast for the $3865 \times 3865$
 distance matrix than the original implementation.
+
+\subsection{Mappings}
+
+\begin{itemize}
+    \item All rooted in Mexico precisely Mexico city
+    \item MEX - USA - EU
+    \item mostly via USA
+    \item countries wise effective and geographical pretty similar
+    \item airport more possible connections then country
+\end{itemize}
 
 
 \section{Discussion}
@@ -227,20 +237,20 @@ If one is interested in how the disease was imported into a specific country or
 region, the information that can be extracted from the labeling given by Sankoff
 is limited: There might be many incoming routes to one airport or country. However,
 the computed tree does not give any historical ordering, i.e. it does not
-indicate which connection was first (Figure~\ref{fig:DEU0}).
+indicate which connection was first (Figure~\ref{fig:Europe}).
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\linewidth]{world.png}
+    \includegraphics[width=\linewidth]{country_effective_country.pdf}
     \caption{World}%
-    \label{fig:world}
+    \label{fig:world effective}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\linewidth]{DEU_0.png}
-    \caption{DEU0}%
-    \label{fig:DEU0}
+    \includegraphics[width=\linewidth]{airport_geographic_europe.pdf}
+    \caption{Geographic distances transition to europe}%
+    \label{fig:Europe}
 \end{figure}
 
 
@@ -248,4 +258,3 @@ indicate which connection was first (Figure~\ref{fig:DEU0}).
 \bibliography{references}  
 
 \end{document}
-
