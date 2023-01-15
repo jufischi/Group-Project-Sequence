@@ -42,6 +42,12 @@
   5969276 \\
 }
 
+% change letter size to 11?
+% \makeatletter
+% \input{size11.clo}
+% \makeatother
+% \setlength{\parindent}{0pt}
+
 \begin{document}
 \maketitle
 
@@ -147,7 +153,7 @@ a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(T
 \section{Results}
 
 \subsection{Labeled trees}
-For the given input phylogeny, we've computed four different internal labelings: 
+For the given input phylogeny, we have computed four different internal labelings: 
 \begin{itemize}
     \item one based on the geographic distances between airports
     \item one based on the effective distances between airports
@@ -155,17 +161,17 @@ For the given input phylogeny, we've computed four different internal labelings:
     \item one based on the effective distances between countries
 \end{itemize}
 
-Our tree that is based on the geographic distances between airports differs in
-one node from the corresponding tree given in
-\cite{reimeringPhylogeographicReconstructionUsing2020}, the trees that are based
+Our tree that is based on the geographic distances between airports differs from the corresponding tree given in
+\cite{reimeringPhylogeographicReconstructionUsing2020} in
+one node, the trees that are based
 on the effective geographic distances between airports are equal. 
 
-Therefore we do also place the origin of the outbreak in Mexico and identify North America as the region from which the virus mostly spread from (Figure \ref{fig:world_comp}). This holds true for all computed internal labelings. Mapping all airports within one country to its center results in marginal differences between geographic and effective distances as seen in Figure \ref{fig:world_comp}. 
+Therefore, we also place the origin of the outbreak in Mexico and identify North America as the region which the virus mostly spread from (Figure \ref{fig:world_comp}). This holds true for all computed internal labelings. Mapping all airports within one country to its center results in marginal differences between geographic and effective distances as seen in Figure \ref{fig:world_comp}. 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\linewidth]{country_effective_country.pdf}
-    \caption{\textbf{Reconstructed spread using (a) effective and (b) geographic distances.} Geographic distances are defined as the interval between two airports. Effective distances were measured by the number of passengers transiting between two airports within one year. All airports located in the same country were mapped to the center of the corresponding country. In both cases is the root of the tree placed in Mexico (stripped in dark red). Further are most outgoing edges rooted in North America. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
+    \includegraphics[width=\linewidth,trim={1.5cm 0 1.5cm 0}]{country_effective_country.pdf}
+    \caption{\textbf{Reconstructed spread using (a) effective and (b) geographic distances.} Geographic distances are defined as the actual distance between two airports. Effective distances were measured by the number of passengers transiting between two airports within one year. To allow for a clear visualization, all airports located in the same country were mapped to the center of the corresponding country. In both cases the root of the tree is placed in Mexico (striped in dark red). Further, most outgoing edges are rooted in North America. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
     \label{fig:world_comp}
 \end{figure}
 
@@ -177,7 +183,9 @@ To compare our inferred phylogeographic trees to the ones from \cite{reimeringPh
 Further, we calculated the distances between the trees we calculated using effective and geographic distances. The distance between the trees based on effective and geographic distances between airports was 65149. For the country-based trees the distance was slightly less with 12307.03. A comparison of airport- to country-inferred trees was not possible because the Fr\'{e}chet distance calculation is based on a geographic distance matrix, which should be applicable to both compared trees.
 
 \subsection{Hot-spots}
-From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most to spreading the virus, can be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstruct the tree using effective and geographic airport data, respectively. 
+From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most to spreading the virus, can be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstruct the tree using effective and geographic airport data, respectively.
+
+\todo{order in our case is the same as theirs <- discussion or here?}
 
 \begin{table}[h!]
 \centering
@@ -296,8 +304,8 @@ does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\linewidth]{airport_effective_europe.pdf}
-    \caption{\textbf{Reconstructed paths from Mexico towards different European countries using effective distances.} Effective distances were measured by the number of passengers transiting between two airports within one year. Each panel holds all possible paths ending in (a) Germany, (b) Spain, (c) Sweden or (d) Great Britain. The root is placed in Mexico City International Airport (marked as dark red). The country of origin Mexico is stripped in dark red. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
+    \includegraphics[width=\linewidth,trim={0.5cm 0 0.5cm 0}]{airport_effective_europe.pdf}
+    \caption{\textbf{Reconstructed paths from Mexico towards different European countries using effective distances.} Effective distances were measured by the number of passengers transiting between two airports within one year. Each panel holds all possible paths ending in (a) Germany, (b) Spain, (c) Sweden or (d) Great Britain. The root is placed in Mexico City International Airport (marked as dark red). The country of origin Mexico is striped in dark red. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
     \label{fig:Europe}
 \end{figure}
 
