@@ -33,7 +33,7 @@ def main() -> None:
             else:
                 print(f"variant file {variant_file_path} not found, please perform Sankoff")
 
-            title = ['(a) effective distances', '(b) geographic distances']
+            title = ['(a) geographic distances', '(b) effective distances']
             if idx % 2 == 0:
                 fig, ax = plt.subplots(2, 1)
             TreeVisualizer.draw_tree(variant_tree, ax[idx % 2], every=False, color="")

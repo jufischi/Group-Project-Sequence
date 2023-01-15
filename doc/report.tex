@@ -154,17 +154,18 @@ For the given input phylogeny, we've computed four different internal labelings:
 Our tree that is based on the geographic distances between airports differs in
 one node from the corresponding tree given in
 \cite{reimeringPhylogeographicReconstructionUsing2020}, the trees that are based
-on the effective geographic distances between airports are equal.
+on the effective geographic distances between airports are equal. 
 
-\subsection{Mappings}
+Therefore we do also place the origin of the outbreak in Mexico and identify North America as the region from which the virus mostly spread from (Figure \ref{fig:world_comp}). This holds true for all computed internal labelings. Mapping all airports within one country to its center results in marginal differences between geographic and effective distances as seen in Figure \ref{fig:world_comp}. 
 
-\begin{itemize}
-    \item All rooted in Mexico precisely Mexico city
-    \item MEX - USA - EU
-    \item mostly via USA
-    \item countries wise effective and geographical pretty similar
-    \item airport more possible connections than country
-\end{itemize}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\linewidth]{country_effective_country.pdf}
+    \caption{\textbf{Reconstructed spread using (a) effective and (b) geographic distances.} Geographic distances are defined as the interval between two airports. Effective distances were measured by the number of passengers transiting between two airports within one year. All airports located in the same country were mapped to the center of the corresponding country. In both cases is the root of the tree placed in Mexico (stripped in dark red). Further are most outgoing edges rooted in North America. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
+    \label{fig:world_comp}
+\end{figure}
+
+\todo{airport more possible connections than country!?}
 
 \subsection{Fr\'{e}chet distances}
 The Fr\'{e}chet tree distances for our trees using airport data compared to the trees from \cite{reimeringPhylogeographicReconstructionUsing2020} are as follows:
@@ -260,7 +261,7 @@ Detroit.
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery 
 of the origin of a disease
-(Figure~\ref{fig:world_effective}). In comparison with an algorithm needing much more time,
+(Figure~\ref{fig:world_comp}). In comparison with an algorithm needing much more time,
 this can also be done incrementally, allowing the current predictions to be
 updated with new arrivals of data. This can be particularly useful in the first stages
 of an pandemic when new data might arrive very quickly to challenge the current
@@ -278,17 +279,10 @@ the computed tree for H1N1 does not give detailed historical ordering besides
 the order on the path from the root to a leaf, i.e. it
 does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
 
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=\linewidth]{country_effective_country.pdf}
-    \caption{World}%
-    \label{fig:world_effective}
-\end{figure}
-
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\linewidth]{airport_geographic_europe.pdf}
-    \caption{Geographic distances transition to europe}%
+    \includegraphics[width=\linewidth]{airport_effective_europe.pdf}
+    \caption{\textbf{Reconstructed paths from Mexico towards different European countries using effective distances.} Effective distances were measured by the number of passengers transiting between two airports within one year. Each panel holds all possible paths ending in (a) Germany, (b) Spain, (c) Sweden or (d) Great Britain. The root is placed in Mexico City International Airport (marked as dark red). The country of origin Mexico is stripped in dark red. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
     \label{fig:Europe}
 \end{figure}
 
