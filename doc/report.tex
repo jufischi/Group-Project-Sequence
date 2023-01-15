@@ -134,6 +134,8 @@ of countries.
 
 We calculated Fr\'{e}chet distances as a measure of comparing our results to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. Fr\'{e}chet tree distances can be used to compare phylogeographic trees that are inferred from the same taxa. This is done by comparing the paths of locations that lead from every leaf node to the root, calculating their discrete Fr\'{e}chet distance and correcting this distance by the number of paths leading through each node. For this computation the geographic distances are used \cite{reimeringFrechetTreeDistance2018}. We used the implementation provided in \cite{reimeringFrechetTreeDistance2018} for the calculation.
 
+Further information that can be drawn from the reconstructed trees are hot-spots in the spread of the looked-at pandemic. These are the airports or countries with the highest number of outgoing flights to new locations. We computed these by traversing through the reconstructed trees and keeping a dictionary of the number of children of a node that had a different label assigned to them than their parent node.
+
 To compare our implementation with the implementation that
 was provided in \cite{reimeringPhylogeographicReconstructionUsing2020} in terms of runtime, we
 executed the Sankoff implementation using the built-in command \texttt{time} on
@@ -168,31 +170,19 @@ Therefore we do also place the origin of the outbreak in Mexico and identify Nor
 \todo{airport more possible connections than country!?}
 
 \subsection{Fr\'{e}chet distances}
-The Fr\'{e}chet tree distances for our trees using airport data compared to the trees from \cite{reimeringPhylogeographicReconstructionUsing2020} are as follows:
-\begin{itemize}
-    \item geographic distances: 123.8497
-    \item effective distances: 0
-\end{itemize}
+To compare our inferred phylogeographic trees to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}, we calculated Fr\'{e}chet tree distances. We did this only for the trees we reconstructed using airport data. The Fr\'{e}chet tree distance between the trees based on geographic distances was 123.849, while the distance for the trees reconstructed based on effective distances was 0.
 
-Further, we calculated the distances between the trees we calculated using effective and geographic distances
-\begin{itemize}
-    \item effective airport vs geographic airport: 65149
-    \item effective country vs geographic country: 12307.03
-    \item airport to country comparison not possible due to distance matrix
-\end{itemize}
+Further, we calculated the distances between the trees we calculated using effective and geographic distances. The distance between the trees based on effective and geographic distances between airports was 65149. For the country-based trees the distance was slightly less with 12307.03. A comparison of airport- to country-inferred trees was not possible because the Fr\'{e}chet distance calculation is based on a geographic distance matrix, which should be applicable to both compared trees.
 
 \subsection{Hot-spots}
-From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most, of the spread of the 2009 H1N1 can be inferred. Table \ref{tab: hotspots airport effective} shows the top 6 hot spots when we reconstruct the tree using effective airport data. \todo{wright more about other tables (if we use this at all)}
-
-In case of the country data, in both trees reconstructed from effective and from geographic distance matrices, the USA and Mexico are the countries with by far the most outgoing flights to other countries.
-
-\todo{two tables next to each other! PHX wieso andere Zahlen? wir 26, die 24}
-we have the same order
+From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most to spreading the virus, can be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstruct the tree using effective and geographic airport data, respectively. 
 
 \begin{table}[h!]
 \centering
+\parbox{.45\linewidth}{
+\centering
 \begin{tabular}{r|c}
-location & no. of outgoing flights \\
+airport & no. of outgoing flights \\
 \hline
 JFK      & 31                      \\
 PHX      & 26                      \\
@@ -201,14 +191,14 @@ IAH      & 13                      \\
 PHL      & 11                      \\
 MEX      & 11                                     
 \end{tabular}
-\caption{Top 6 hot-spots of the reconstructed tree using effective airport data.}
+\caption{Hot-spots computed with tree reconstruction using effective airport data.}
 \label{tab: hotspots airport effective}
-\end{table}
-
-\begin{table}[h!]
+}
+\qquad
+\parbox{.45\linewidth}{
 \centering
 \begin{tabular}{r|c}
-location & no. of outgoing flights \\
+airport & no. of outgoing flights \\
 \hline
 COS      & 31                      \\
 JFK      & 26                      \\
@@ -217,9 +207,12 @@ JBR      & 11                      \\
 PHL      & 9                       \\
 DFW      & 9                                
 \end{tabular}
-\caption{Top 6 hot-spots of the reconstructed tree using geographic airport data.}
+\caption{Hot-spots computed with tree reconstruction using geographic airport data.}
 \label{tab: hotspots airport geographic}
+}
 \end{table}
+
+In case of the country data and using geographic as well as effective distances for the tree reconstruction, the USA and Mexico are the countries with by far the most outgoing flights to other countries. Apart from them only two other countries, namely Spain and Canada, have contributed to the spread across countries.
 
 \subsection{Runtime}
 Our implementation of the Sankoff algorithm using the geographic distance
@@ -288,6 +281,24 @@ does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
 
 
 \bibliographystyle{unsrt}  
-\bibliography{references}  
+\bibliography{references} 
+
+\ \\
+\appendix
+\section*{Appendix}
+The code for this project can be found at:
+
+https://github.com/jufischi/Group-Project-Sequence.git
+\todo{make clickable?}
+
+\ \\
+
+This includes the following:
+\begin{itemize}
+    \item the \texttt{ensure\_data.py} file, which needs to be run with the option \texttt{-\texttt{-}download} to download the data we used for the tree reconstruction
+    \item the \texttt{phylogeographics.py} file, which runs Sankoff on all 4 input options and saves the reconstructed trees in Newick format
+    \item the generated plots as well as the python scripts we used to generate them (\texttt{phylogeographics\_country.py} and \texttt{phylogeographics\_europe.py})
+    \item python files including classes and python scripts needed to perform Sankoff as well as visualize and explore the resulting trees
+\end{itemize} 
 
 \end{document}
