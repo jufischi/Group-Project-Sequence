@@ -156,6 +156,16 @@ one node from the corresponding tree given in
 \cite{reimeringPhylogeographicReconstructionUsing2020}, the trees that are based
 on the effective geographic distances between airports are equal.
 
+\subsection{Mappings}
+
+\begin{itemize}
+    \item All rooted in Mexico precisely Mexico city
+    \item MEX - USA - EU
+    \item mostly via USA
+    \item countries wise effective and geographical pretty similar
+    \item airport more possible connections than country
+\end{itemize}
+
 \subsection{Fr\'{e}chet distances}
 The Fr\'{e}chet tree distances for our trees using airport data compared to the trees from \cite{reimeringPhylogeographicReconstructionUsing2020} are as follows:
 \begin{itemize}
@@ -168,23 +178,6 @@ Further, we calculated the distances between the trees we calculated using effec
     \item effective airport vs geographic airport: 65149
     \item effective country vs geographic country: 12307.03
     \item airport to country comparison not possible due to distance matrix
-\end{itemize}
-
-\subsection{Runtime}
-Our implementation of the Sankoff algorithm using the geographic distance
-matrix for airports took \texttt{2m39.466s}, while the implementation provided in
-\cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
-Our implementation is more than twice as fast for the $3865 \times 3865$
-distance matrix than the original implementation.
-
-\subsection{Mappings}
-
-\begin{itemize}
-    \item All rooted in Mexico precisely Mexico city
-    \item MEX - USA - EU
-    \item mostly via USA
-    \item countries wise effective and geographical pretty similar
-    \item airport more possible connections than country
 \end{itemize}
 
 \subsection{Hot-spots}
@@ -226,6 +219,14 @@ DFW      & 9
 \caption{Top 6 hot-spots of the reconstructed tree using geographic airport data.}
 \label{tab: hotspots airport geographic}
 \end{table}
+
+\subsection{Runtime}
+Our implementation of the Sankoff algorithm using the geographic distance
+matrix for airports took \texttt{2m39.466s}, while the implementation provided in
+\cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
+Our implementation is more than twice as fast for the $3865 \times 3865$
+distance matrix than the original implementation.
+
 
 \section{Discussion}
 The Sankoff algorithm is rather easy to understand and can even be computed by
