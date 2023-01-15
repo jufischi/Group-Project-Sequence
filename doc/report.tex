@@ -156,6 +156,16 @@ one node from the corresponding tree given in
 \cite{reimeringPhylogeographicReconstructionUsing2020}, the trees that are based
 on the effective geographic distances between airports are equal.
 
+\subsection{Mappings}
+
+\begin{itemize}
+    \item All rooted in Mexico precisely Mexico city
+    \item MEX - USA - EU
+    \item mostly via USA
+    \item countries wise effective and geographical pretty similar
+    \item airport more possible connections than country
+\end{itemize}
+
 \subsection{Fr\'{e}chet distances}
 The Fr\'{e}chet tree distances for our trees using airport data compared to the trees from \cite{reimeringPhylogeographicReconstructionUsing2020} are as follows:
 \begin{itemize}
@@ -170,25 +180,14 @@ Further, we calculated the distances between the trees we calculated using effec
     \item airport to country comparison not possible due to distance matrix
 \end{itemize}
 
-\subsection{Runtime}
-Our implementation of the Sankoff algorithm using the geographic distance
-matrix for airports took \texttt{2m39.466s}, while the implementation provided in
-\cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
-Our implementation is more than twice as fast for the $3865 \times 3865$
-distance matrix than the original implementation.
-
-\subsection{Mappings}
-
-\begin{itemize}
-    \item All rooted in Mexico precisely Mexico city
-    \item MEX - USA - EU
-    \item mostly via USA
-    \item countries wise effective and geographical pretty similar
-    \item airport more possible connections than country
-\end{itemize}
-
 \subsection{Hot-spots}
-From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most, of the spread of the 2009 H1N1 can be inferred. Table \ref{tab: hotspots airport effective} shows the top 11 \todo{show less? maybe 6} hot spots when we reconstruct the tree using effective airport data. \todo{wright more about other tables (if we use this at all)}
+From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most, of the spread of the 2009 H1N1 can be inferred. Table \ref{tab: hotspots airport effective} shows the top 6 hot spots when we reconstruct the tree using effective airport data. \todo{wright more about other tables (if we use this at all)}
+
+In case of the country data, in both trees reconstructed from effective and from geographic distance matrices, the USA and Mexico are the countries with by far the most outgoing flights to other countries.
+
+\todo{two tables next to each other! PHX wieso andere Zahlen? wir 26, die 24}
+we have the same order
+
 \begin{table}[h!]
 \centering
 \begin{tabular}{r|c}
@@ -199,14 +198,9 @@ PHX      & 26                      \\
 LAX      & 21                      \\
 IAH      & 13                      \\
 PHL      & 11                      \\
-MEX      & 11                      \\
-CUN      & 6                       \\
-DEN      & 6                       \\
-ILG      & 5                       \\
-DFW      & 5                       \\
-IND      & 5                                   
+MEX      & 11                                     
 \end{tabular}
-\caption{Top 11 hot-spots of the reconstructed tree using effective airport data.}
+\caption{Top 6 hot-spots of the reconstructed tree using effective airport data.}
 \label{tab: hotspots airport effective}
 \end{table}
 
@@ -220,45 +214,18 @@ JFK      & 26                      \\
 MEX      & 12                      \\
 JBR      & 11                      \\
 PHL      & 9                       \\
-DFW      & 9                       \\
-LAX      & 8                       \\
-IND      & 7                       \\
-MDT      & 6                       \\
-ELD      & 6                       \\
-DEN      & 6                                  
+DFW      & 9                                
 \end{tabular}
-\caption{Top 11 hot-spots of the reconstructed tree using geographic airport data.}
+\caption{Top 6 hot-spots of the reconstructed tree using geographic airport data.}
 \label{tab: hotspots airport geographic}
 \end{table}
 
-\begin{table}[h!]
-\centering
-\begin{tabular}{r|c}
-location & no. of outgoing flights \\
-\hline
-US       & 41                      \\
-MX       & 32                      \\
-ES       & 2                       \\
-CA       & 1                                      
-\end{tabular}
-\caption{4 hot-spots of the reconstructed tree using effective country data.}
-\label{tab: hotspots country effective}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{r|c}
-location & no. of outgoing flights \\
-\hline
-US       & 54                      \\
-MX       & 13                      \\
-ES       & 2                       \\
-CA       & 1                       
-\end{tabular}
-\caption{4 hot-spots of the reconstructed tree using geographic country data.}
-\label{tab: hotspots country geographic}
-\end{table}
-
+\subsection{Runtime}
+Our implementation of the Sankoff algorithm using the geographic distance
+matrix for airports took \texttt{2m39.466s}, while the implementation provided in
+\cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
+Our implementation is more than twice as fast for the $3865 \times 3865$
+distance matrix than the original implementation.
 
 
 \section{Discussion}
@@ -282,20 +249,21 @@ and \texttt{DTW} is $371.54$. Choosing either \texttt{IND} or \texttt{DTW} for
 \texttt{intNode97} yields the same cost for choosing \texttt{IND} for
 \texttt{intNode96}. Thus, from the perspective of maximum parsimony, both
 choices are optimal. Moreover, the real-world implications of this concrete
-difference should be small. Indianapolis and Detroit are cities that are close
-to each other and as the sampling locations for the leaves are mapped to the
-closest airport, there is already a certain amount of distortion
-\todo{fuzziness? noise?} in the input data that has a comparable magnitude to
-the difference between Indianapolis and Detroit.\todo{How do we know the magnitude of
-noise in the input data?}
+difference should be small: Indianapolis and Detroit are cities that are close
+to each other. Further, for the H1N1 data,  the sampling locations for the
+leaves are mapped to the closest airport or, in the case of Mexico, all samples 
+are mapped to \texttt{MEX}. Thus, there is already a certain amount of
+distortion in the input data \cite{reimeringDistanceMatricesParsimonious2019} 
+which has at least the magnitude of the difference between Indianapolis and
+Detroit.
 
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery 
 of the origin of a disease
-(Figure~\ref{fig:world}). In comparsion with an algorithm needing much more time,
+(Figure~\ref{fig:world_effective}). In comparison with an algorithm needing much more time,
 this can also be done incrementally, allowing the current predictions to be
 updated with new arrivals of data. This can be particularly useful in the first stages
-of an pandemic when new data migh arrive very quickly to challenge the current
+of an pandemic when new data might arrive very quickly to challenge the current
 estimations. While the algorithmic inference of the origin must be
 treated with caution, as it is not precise
 \cite{reimeringPhylogeographicReconstructionUsing2020}, it is also worth noting
@@ -306,16 +274,15 @@ disease can have undesired, societal implications if not treated with caution
 If one is interested in how the disease was imported into a specific country or
 region, the information that can be extracted from the labeling given by Sankoff
 is limited: There might be many incoming routes to one airport or country. However,
-the computed tree does not give any historical ordering, i.e. it does not
-indicate which connection was first (Figure~\ref{fig:Europe}).\todo{Shouldn't
-this dependend on the tree? E.g. time prediction is possible with a tree 
-given by UPGMA?}
+the computed tree for H1N1 does not give detailed historical ordering besides
+the order on the path from the root to a leaf, i.e. it
+does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{country_effective_country.pdf}
     \caption{World}%
-    \label{fig:world effective}
+    \label{fig:world_effective}
 \end{figure}
 
 \begin{figure}[h!]
