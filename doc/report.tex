@@ -169,18 +169,9 @@ on the effective geographic distances between airports are equal.
 \end{itemize}
 
 \subsection{Fr\'{e}chet distances}
-The Fr\'{e}chet tree distances for our trees using airport data compared to the trees from \cite{reimeringPhylogeographicReconstructionUsing2020} are as follows:
-\begin{itemize}
-    \item geographic distances: 123.8497
-    \item effective distances: 0
-\end{itemize}
+To compare our inferred phylogeographic trees to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}, we calculated Fr\'{e}chet tree distances. We did this only for the trees we reconstructed using airport data. The Fr\'{e}chet tree distance between the trees based on geographic distances was 123.849, while the distance for the trees reconstructed based on effective distances was 0.
 
-Further, we calculated the distances between the trees we calculated using effective and geographic distances
-\begin{itemize}
-    \item effective airport vs geographic airport: 65149
-    \item effective country vs geographic country: 12307.03
-    \item airport to country comparison not possible due to distance matrix
-\end{itemize}
+Further, we calculated the distances between the trees we calculated using effective and geographic distances. The distance between the trees based on effective and geographic distances between airports was 65149. For the country-based trees the distance was slightly less with 12307.03. A comparison of airport- to country-inferred trees was not possible because the Fr\'{e}chet distance calculation is based on a geographic distance matrix, which should be applicable to both compared trees.
 
 \subsection{Hot-spots}
 From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most to spreading the virus, can be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstruct the tree using effective and geographic airport data, respectively. 
@@ -296,6 +287,24 @@ does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
 
 
 \bibliographystyle{unsrt}  
-\bibliography{references}  
+\bibliography{references} 
+
+\ \\
+\appendix
+\section*{Appendix}
+The code for this project can be found at:
+
+https://github.com/jufischi/Group-Project-Sequence.git
+\todo{make clickable?}
+
+\ \\
+
+This includes the following:
+\begin{itemize}
+    \item the \texttt{ensure\_data.py} file, which needs to be run with the option \texttt{-\texttt{-}download} to download the data we used for the tree reconstruction
+    \item the \texttt{phylogeographics.py} file, which runs Sankoff on all 4 input options and saves the reconstructed trees in Newick format
+    \item the generated plots as well as the python scripts we used to generate them (\texttt{phylogeographics\_country.py} and \texttt{phylogeographics\_europe.py})
+    \item python files including classes and python scripts needed to perform Sankoff as well as visualize and explore the resulting trees
+\end{itemize} 
 
 \end{document}
