@@ -282,20 +282,21 @@ and \texttt{DTW} is $371.54$. Choosing either \texttt{IND} or \texttt{DTW} for
 \texttt{intNode97} yields the same cost for choosing \texttt{IND} for
 \texttt{intNode96}. Thus, from the perspective of maximum parsimony, both
 choices are optimal. Moreover, the real-world implications of this concrete
-difference should be small. Indianapolis and Detroit are cities that are close
-to each other and as the sampling locations for the leaves are mapped to the
-closest airport, there is already a certain amount of distortion
-\todo{fuzziness? noise?} in the input data that has a comparable magnitude to
-the difference between Indianapolis and Detroit.\todo{How do we know the magnitude of
-noise in the input data?}
+difference should be small: Indianapolis and Detroit are cities that are close
+to each other. Further, for the H1N1 data,  the sampling locations for the
+leaves are mapped to the closest airport or, in the case of Mexico, all samples 
+are mapped to \texttt{MEX}. Thus, there is already a certain amount of
+distortion in the input data \cite{reimeringDistanceMatricesParsimonious2019} 
+which has at least the magnitude of the difference between Indianapolis and
+Detroit.
 
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery 
 of the origin of a disease
-(Figure~\ref{fig:world}). In comparsion with an algorithm needing much more time,
+(Figure~\ref{fig:world_effective}). In comparison with an algorithm needing much more time,
 this can also be done incrementally, allowing the current predictions to be
 updated with new arrivals of data. This can be particularly useful in the first stages
-of an pandemic when new data migh arrive very quickly to challenge the current
+of an pandemic when new data might arrive very quickly to challenge the current
 estimations. While the algorithmic inference of the origin must be
 treated with caution, as it is not precise
 \cite{reimeringPhylogeographicReconstructionUsing2020}, it is also worth noting
@@ -306,16 +307,15 @@ disease can have undesired, societal implications if not treated with caution
 If one is interested in how the disease was imported into a specific country or
 region, the information that can be extracted from the labeling given by Sankoff
 is limited: There might be many incoming routes to one airport or country. However,
-the computed tree does not give any historical ordering, i.e. it does not
-indicate which connection was first (Figure~\ref{fig:Europe}).\todo{Shouldn't
-this dependend on the tree? E.g. time prediction is possible with a tree 
-given by UPGMA?}
+the computed tree for H1N1 does not give detailed historical ordering besides
+the order on the path from the root to a leaf, i.e. it
+does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{country_effective_country.pdf}
     \caption{World}%
-    \label{fig:world effective}
+    \label{fig:world_effective}
 \end{figure}
 
 \begin{figure}[h!]
