@@ -188,7 +188,13 @@ distance matrix than the original implementation.
 \end{itemize}
 
 \subsection{Hot-spots}
-From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most, of the spread of the 2009 H1N1 can be inferred. Table \ref{tab: hotspots airport effective} shows the top 11 \todo{show less? maybe 6} hot spots when we reconstruct the tree using effective airport data. \todo{wright more about other tables (if we use this at all)}
+From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most, of the spread of the 2009 H1N1 can be inferred. Table \ref{tab: hotspots airport effective} shows the top 6 hot spots when we reconstruct the tree using effective airport data. \todo{wright more about other tables (if we use this at all)}
+
+In case of the country data, in both trees reconstructed from effective and from geographic distance matrices, the USA and Mexico are the countries with by far the most outgoing flights to other countries.
+
+\todo{two tables next to each other! PHX wieso andere Zahlen? wir 26, die 24}
+we have the same order
+
 \begin{table}[h!]
 \centering
 \begin{tabular}{r|c}
@@ -199,14 +205,9 @@ PHX      & 26                      \\
 LAX      & 21                      \\
 IAH      & 13                      \\
 PHL      & 11                      \\
-MEX      & 11                      \\
-CUN      & 6                       \\
-DEN      & 6                       \\
-ILG      & 5                       \\
-DFW      & 5                       \\
-IND      & 5                                   
+MEX      & 11                                     
 \end{tabular}
-\caption{Top 11 hot-spots of the reconstructed tree using effective airport data.}
+\caption{Top 6 hot-spots of the reconstructed tree using effective airport data.}
 \label{tab: hotspots airport effective}
 \end{table}
 
@@ -220,46 +221,11 @@ JFK      & 26                      \\
 MEX      & 12                      \\
 JBR      & 11                      \\
 PHL      & 9                       \\
-DFW      & 9                       \\
-LAX      & 8                       \\
-IND      & 7                       \\
-MDT      & 6                       \\
-ELD      & 6                       \\
-DEN      & 6                                  
+DFW      & 9                                
 \end{tabular}
-\caption{Top 11 hot-spots of the reconstructed tree using geographic airport data.}
+\caption{Top 6 hot-spots of the reconstructed tree using geographic airport data.}
 \label{tab: hotspots airport geographic}
 \end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{r|c}
-location & no. of outgoing flights \\
-\hline
-US       & 41                      \\
-MX       & 32                      \\
-ES       & 2                       \\
-CA       & 1                                      
-\end{tabular}
-\caption{4 hot-spots of the reconstructed tree using effective country data.}
-\label{tab: hotspots country effective}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{r|c}
-location & no. of outgoing flights \\
-\hline
-US       & 54                      \\
-MX       & 13                      \\
-ES       & 2                       \\
-CA       & 1                       
-\end{tabular}
-\caption{4 hot-spots of the reconstructed tree using geographic country data.}
-\label{tab: hotspots country geographic}
-\end{table}
-
-
 
 \section{Discussion}
 The Sankoff algorithm is rather easy to understand and can even be computed by
