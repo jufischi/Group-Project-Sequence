@@ -12,13 +12,14 @@ def main() -> None:
         country_mapper = CountryTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
         airport_mapper = AirportTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
         variants = [
-            ("geographic.distance.matrix.csv", "airport_geographic", airport_mapper),
-            ("effective.distance.matrix.csv", "airport_effective", airport_mapper),
-            ("geographic.distance.matrix.country.csv", "country_geographic", country_mapper),
-            ("effective.distance.matrix.country.csv", "country_effective", country_mapper)
+            (0, "geographic.distance.matrix.csv", "airport_geographic", airport_mapper),
+            (1, "effective.distance.matrix.csv", "airport_effective", airport_mapper),
+            (2, "geographic.distance.matrix.country.csv", "country_geographic", country_mapper),
+            (3, "effective.distance.matrix.country.csv", "country_effective", country_mapper)
         ]
 
-        for variant_matrix_name, variant_name, variant_mapper in variants:
+        mpl.rcParams['font.family'] = 'Times New Roman'
+        for idx, variant_matrix_name, variant_name, variant_mapper in variants:
             print(f"current variant: {variant_name}")
             variant_file_path = os.path.join(cwd, "data", f"{variant_name}.txt")
             variant_tree = None
@@ -32,20 +33,22 @@ def main() -> None:
             else:
                 print(f"variant file {variant_file_path} not found, please perform Sankoff")
 
-            mpl.rcParams['font.family'] = 'Times New Roman'
-            fig, ax = plt.subplots()
-            TreeVisualizer.draw_tree(variant_tree, ax, every=False, color="")
+            title = ['(a) effective distances', '(b) geographic distances']
+            if idx % 2 == 0:
+                fig, ax = plt.subplots(2, 1)
+            TreeVisualizer.draw_tree(variant_tree, ax[idx % 2], every=False, color="")
+            ax[idx % 2].set_title(title[idx % 2], loc='left', y=0.95)
 
-            fig.subplots_adjust(bottom=0.1)
-            norm = mpl.colors.Normalize(-100 / 2, 100)
-            cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap="Reds"), cax=plt.axes([0.25, 0.2, 0.5, 0.025]),
-                                orientation='horizontal')
-            cbar.ax.get_xaxis().set_ticks([-100 / 2, 100], labels=["src", "dest"])
-            cbar.outline.set_visible(False)
-            plt.tight_layout()
+            if idx % 2 == 1:
+                fig.subplots_adjust(bottom=0.15, hspace=0.1)
+                norm = mpl.colors.Normalize(-100 / 2, 100)
+                cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap="Reds"), cax=plt.axes([0.25, 0.1, 0.5, 0.025]),
+                                    orientation='horizontal')
+                cbar.ax.get_xaxis().set_ticks([-100 / 2, 100], labels=["src", "dest"])
+                cbar.outline.set_visible(False)
 
-            plt.savefig(os.path.join(cwd, "doc", variant_name + "_country.pdf"), dpi=150)
-            plt.show()
+                plt.savefig(os.path.join(cwd, "doc", variant_name + "_country.pdf"), dpi=150)
+                plt.show()
 
 
 if __name__ == '__main__':
