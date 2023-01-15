@@ -30,7 +30,7 @@ def main() -> None:
                 print(f"variant file {variant_file_path} not found, please perform Sankoff")
 
             europe = ['DEU', 'ESP', 'SWE', 'GBR']
-            titles = ['(a) DEU', '(b) ESP', '(c) SWE', '(d) GBR']
+            titles = ['(a) Germany', '(b) Spain', '(c) Sweden', '(d) Great Britain']
 
             mpl.rcParams['font.family'] = 'Times New Roman'
             fig, axes = plt.subplots(2, 2)
