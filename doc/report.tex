@@ -58,7 +58,7 @@
 \section{Introduction}
 Given a rooted tree $T$ with labeled leaves, the small parsimony problem is about
 finding labels for the internal nodes of the tree such that the changes from an
-internal nodes to all of its children are minimal
+internal node to all of its children are minimal
 \cite{jonesIntroductionBioinformaticsAlgorithms2004}.
 Among others, the Sankoff algorithm can be used to solve the small parsimony
 problem \cite{sankoffMinimalMutationTrees1975}. 
@@ -281,6 +281,19 @@ distortion in the input data \cite{reimeringDistanceMatricesParsimonious2019}
 which has at least the magnitude of the difference between Indianapolis and
 Detroit.
 
+The tree that our implementation computed for the effective airport matrices is
+equal to the corresponding tree given by
+\cite{reimeringPhylogeographicReconstructionUsing2020}. Both the difference for
+the geographic tree and the equality of the effective tree are also reflected in
+the calculated Fr\'{e}chet distances. More importantly, choosing different
+distance matrices (geographic vs. effective) has an impact on the actual
+geographic spread that is calculated. In Figure~\ref{fig:world_comp}, this is
+only indicated as this plots only one data point per country. Still, we can see
+a transition completely vanishing: Mexiko $\rightarrow$ Canada is only present
+when using the effective distances. This is intuitive, as having more passenger
+travel between airports increases the probability of viral spread between those
+places. 
+
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery 
 of the origin of a disease
@@ -300,7 +313,21 @@ region, the information that can be extracted from the labeling given by Sankoff
 is limited: There might be many incoming routes to one airport or country. However,
 the computed tree for H1N1 does not give detailed historical ordering besides
 the order on the path from the root to a leaf, i.e. it
-does not indicate which connection occurred first (Figure~\ref{fig:Europe}).
+does not indicate which connection occurred first. In Figure~\ref{fig:Europe},
+we visualize this for the four european countries of Germany, Spain, the United
+Kingdom and Sweden. It is not obvious which of the incoming routes to London,
+say, actually imported the virus first.
+
+We have seen that Sankoff enables rapid tree generation for large trees and
+large distance matrices in the early stages of the pandemic. Depending on the
+choice of the distance matrix, this can model various spread models, e.g. for
+viruses or neophytes. However, the results may be useless if the chosen distance
+matrix does not model the geographical movement correctly. The prediction for a
+disease that is transmitted by birds will likely be wrong if it is based on
+effective airport data. However, due to the rapid calculation, many different
+distance matrices can be evaluated against observed data points to determine the
+actual mode of transportation, which can help to understand the spread of a
+virus or different new species better.
 
 \begin{figure}[h!]
     \centering
