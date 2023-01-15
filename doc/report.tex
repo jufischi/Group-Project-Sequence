@@ -14,6 +14,8 @@
 \usepackage{lipsum}
 \usepackage{graphicx}
 \usepackage{todonotes}
+\usepackage[]{tikz}
+\usetikzlibrary{graphs, positioning}
 
 \title{The Sankoff Algorithm for Phylogeographics}
 
@@ -229,11 +231,31 @@ topology, we've demonstrated that the computation of the labels of the internal
 nodes is fast even for huge distance matrices such as the geographic and
 effective distance matrices with $3865 \times 3865$ entries.
 
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \node [align=center] {intNode96 \\ \texttt{IND}}
+          child {node [align=center] {f0dp319 \\ \texttt{IND}}}
+          child {node [align=center] {intNode97 \\ \texttt{IND/DTW}}
+            child {node [align=center] {f0dp45 \\ \texttt{IND}}}
+            child {node [align=center] {f0dp250 \\ \texttt{DTW}}}
+            child {node [align=center] {f0dp322 \\ \texttt{DTW}}}
+          };
+    \end{tikzpicture}
+    \caption{\textbf{The subtree rooted at \texttt{intNode96} of the
+    phylogenetic tree of H1N1}. For each node, the node id as well as the computed
+    label based on the geophraphic distance matrix is displayed. Our implementation of Sankoff's algorithm computes the
+    label \texttt{DTW}, while the original implementation in
+    \cite{reimeringPhylogeographicReconstructionUsing2020} computed \texttt{IND}.}
+    \label{fig:subtree}
+  \end{figure}
+
 The tree that our implementation computed for the geographic airport matrices
 differs in one label from the H1N1 tree given by
 \cite{reimeringPhylogeographicReconstructionUsing2020}, i.e. we label the node
 \texttt{intNode97} with \texttt{DTW} (Detroit Metro Airport) while they find the label
-\texttt{IND} (Indianapolis International Airport).
+\texttt{IND} (Indianapolis International Airport). This difference is depicted
+in Figure~\ref{fig:subtree}.
 This difference is the result of different prioritization in the implementation:
 \texttt{intNode97} is the parent of three leaves, two of them labeled with
 \texttt{DTW} and the third is labeled with \texttt{IND}. The parent of
