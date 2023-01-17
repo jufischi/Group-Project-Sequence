@@ -128,7 +128,7 @@ by using the original data.
 \section{Material and Methods}
 The Sankoff algorithm was implemented using Python 3.10
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
-efficient matrix operations.
+efficient matrix operations, which were necessary for performing the forward pass with an input distance matrix of 3865 $\times$ 3865 entries. We implemented Sankoff as a class, which parses a given Newick string and distance matrix. The algorithm can then be executed by calling \texttt{perform\_sankoff} on the resulting object, which runs the two separate functions for the forward and backward pass. The result is a \texttt{Node} object, which represents a whole reconstructed phylogenetic tree.
 
 The base phylogenetic tree that we used is the H1N1 phylogeny described by
 \cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculations,
@@ -138,7 +138,7 @@ we've used the effective and geographic distance matrices from
 All visualizations were done using Python and Matplotlib \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
 airports we used Geopandas \cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
 airports and pycountry \cite{theunePycountryISOCountry} to translate letter codes
-of countries.
+of countries. The resulting visualizations show the given reconstructed tree mapped onto the world map, where each transition from one country to another is only mapped once even though the same transition could happen several times at different locations in the tree. Thus, this visualizes the geographic information contained in the tree rather than the tree itself.
 
 We calculated Fr\'{e}chet distances as a measure of comparing our results to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. Fr\'{e}chet tree distances can be used to compare phylogeographic trees that are inferred from the same taxa. This is done by comparing the paths of locations that lead from every leaf node to the root, calculating their discrete Fr\'{e}chet distance and correcting this distance by the number of paths leading through each node. For this computation the geographic distances are used \cite{reimeringFrechetTreeDistance2018}. We used the implementation provided in \cite{reimeringFrechetTreeDistance2018} for the calculation.
 
