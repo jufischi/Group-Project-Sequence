@@ -251,20 +251,20 @@ effective distance matrices with $3865 \times 3865$ entries.
           };
     \end{tikzpicture}
     \caption{\textbf{The subtree rooted at \texttt{intNode96} of the
-    phylogenetic tree of H1N1}. For each node, the node id as well as the computed
-    label based on the geophraphic distance matrix is displayed. Our implementation of Sankoff's algorithm computes the
+    phylogenetic tree of H1N1}. For each node, the node ID as well as the computed
+    label based on the geographic distance matrix is displayed. Our implementation of Sankoff's algorithm computes the
     label \texttt{DTW}, while the original implementation in
     \cite{reimeringPhylogeographicReconstructionUsing2020} computed \texttt{IND}.}
     \label{fig:subtree}
   \end{figure}
 
-The tree that our implementation computed for the geographic airport matrices
+The tree that our implementation computed for the geographic airport matrix
 differs in one label from the H1N1 tree given by
 \cite{reimeringPhylogeographicReconstructionUsing2020}, i.e. we label the node
 \texttt{intNode97} with \texttt{DTW} (Detroit Metro Airport) while they find the label
 \texttt{IND} (Indianapolis International Airport). This difference is depicted
 in Figure~\ref{fig:subtree}.
-This difference is the result of different prioritization in the implementation:
+It is the result of different prioritization in the implementation:
 \texttt{intNode97} is the parent of three leaves, two of them labeled with
 \texttt{DTW} and the third is labeled with \texttt{IND}. The parent of
 \texttt{intNode97} is \texttt{intNode96} and has one additional child which is
@@ -275,25 +275,24 @@ and \texttt{DTW} is $371.54$. Choosing either \texttt{IND} or \texttt{DTW} for
 choices are optimal. Moreover, the real-world implications of this concrete
 difference should be small: Indianapolis and Detroit are cities that are close
 to each other. Further, for the H1N1 data,  the sampling locations for the
-leaves are mapped to the closest airport or, in the case of Mexico, all samples 
-are mapped to \texttt{MEX}. Thus, there is already a certain amount of
+leaves were mapped to the closest airport or, in the case of Mexico, all samples 
+were mapped to \texttt{MEX}. Thus, there is already a certain amount of
 distortion in the input data \cite{reimeringDistanceMatricesParsimonious2019} 
 which has at least the magnitude of the difference between Indianapolis and
 Detroit.
 
-The tree that our implementation computed for the effective airport matrices is
+In case of the effective airport matrix, the tree that our implementation computed is
 equal to the corresponding tree given by
 \cite{reimeringPhylogeographicReconstructionUsing2020}. Both the difference for
 the geographic tree and the equality of the effective tree are also reflected in
-the calculated Fr\'{e}chet distances. More importantly, choosing different
+the calculated Fr\'{e}chet distances with values of 123.849 and 0, respectively. More importantly, choosing different
 distance matrices (geographic vs. effective) has an impact on the actual
-geographic spread that is calculated. In Figure~\ref{fig:world_comp}, this is
-only indicated as this plots only one data point per country. Still, we can see
-transitions vanishing completely: Mexiko $\rightarrow$ Canada is only present
+geographic spread that is calculated. This is indicated in Figure~\ref{fig:world_comp}, which plots only one data point per country instead of all airports. Still, we can see
+transitions vanishing completely: for instance, Mexiko $\rightarrow$ Canada is only present
 when using the effective distances. This is intuitive, as having more passenger
 travel between airports increases the probability of viral spread between those
 places. However, the actual spread might involve a combination of both matrices
-and (i.e. the virus is not only spreading via air travel but also via direct
+and \todo{??} (i.e. the virus is not only spreading via air travel but also via direct
 contact of individuals in close proximity of the airport), which makes the
 choice or even computation of the matrix hard.
 
@@ -303,9 +302,9 @@ of the origin of a disease
 (Figure~\ref{fig:world_comp}). In comparison with an algorithm needing much more time,
 this can also be done incrementally, allowing the current predictions to be
 updated with new arrivals of data. This can be particularly useful in the first stages
-of an pandemic when new data might arrive very quickly to challenge the current
+of a pandemic when new data might arrive very quickly to challenge the current
 estimations. While the algorithmic inference of the origin must be
-treated with caution, as it is not precise
+treated with caution as it is not precise
 \cite{reimeringPhylogeographicReconstructionUsing2020}, it is also worth noting
 that in the case of global pandemics, the determination of the origin of the
 disease can have undesired, societal implications if not treated with caution
