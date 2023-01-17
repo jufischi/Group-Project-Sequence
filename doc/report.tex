@@ -125,6 +125,7 @@ In the following report, we implement the method outlined in
 \cite{reimeringPhylogeographicReconstructionUsing2020} and recreate the findings
 by using the original data.
 
+\ \\
 \section{Material and Methods}
 The Sankoff algorithm was implemented using Python 3.10
 \cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
@@ -150,6 +151,7 @@ executed the Sankoff implementation using the built-in command \texttt{time} on
 a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(TM) i5-
 10210U CPU @ 1.60GHz CPU and 16G RAM for the geographic distance matrix for airports.
 
+\ \\
 \section{Results}
 
 \subsection{Labeled trees}
@@ -184,8 +186,6 @@ Further, we calculated the distances between the trees we calculated using effec
 
 \subsection{Hot-spots}
 From the reconstructed phylogeographic trees, the hot-spots, i.e. the airports that contributed the most to spreading the virus, can be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstruct the tree using effective and geographic airport data, respectively.
-
-\todo{order in our case is the same as theirs <- discussion or here?}
 
 \begin{table}[h!]
 \centering
@@ -231,7 +231,7 @@ matrix for airports took \texttt{2m39.466s}, while the implementation provided i
 Our implementation is more than twice as fast for the $3865 \times 3865$
 distance matrix than the original implementation.
 
-
+\ \\
 \section{Discussion}
 The Sankoff algorithm is rather easy to understand and can even be computed by
 hand if the distance matrix and the tree are small. Also, for a given tree
@@ -287,12 +287,11 @@ equal to the corresponding tree given by
 the geographic tree and the equality of the effective tree are also reflected in
 the calculated Fr\'{e}chet distances with values of 123.849 and 0, respectively. More importantly, choosing different
 distance matrices (geographic vs. effective) has an impact on the actual
-geographic spread that is calculated. This is indicated in Figure~\ref{fig:world_comp}, which plots only one data point per country instead of all airports. Still, we can see
+geographic spread that is calculated. This is indicated in Figure~\ref{fig:world_comp}, which plots a summary of all airports of each country into one data point per country instead of all airports. Still, we can see
 transitions vanishing completely: for instance, Mexiko $\rightarrow$ Canada is only present
-when using the effective distances. This is intuitive, as having more passenger
-travel between airports increases the probability of viral spread between those
-places. However, the actual spread might involve a combination of both matrices
-and \todo{??} (i.e. the virus is not only spreading via air travel but also via direct
+when using the effective distances. Further, this can also be observed when looking at the computed hot-spots, i.e. the airports contributing the most to the spread of the virus. \texttt{PHX} and \texttt{LAX} are major hot-spots in the reconstructed tree using effective airport distances but aren't even present in the top hot-spots when looking at the reconstructed tree using geographic distances. This is intuitive, as having more passenger
+travel between airports increases the probability of viral spread between and from those
+places. However, the actual spread might involve a combination of both matrices (i.e. the virus is not only spreading via air travel but also via direct
 contact of individuals in close proximity of the airport), which makes the
 choice or even computation of the matrix hard.
 
@@ -338,11 +337,10 @@ virus or different new species better.
     \label{fig:Europe}
 \end{figure}
 
-
+\newpage
 \bibliographystyle{unsrt}  
 \bibliography{references} 
 
-\ \\
 \appendix
 \section*{Appendix}
 The code for this project can be found at:
