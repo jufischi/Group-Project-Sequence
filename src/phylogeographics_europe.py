@@ -30,7 +30,7 @@ def main() -> None:
                 print(f"variant file {variant_file_path} not found, please perform Sankoff")
 
             europe = ['DEU', 'ESP', 'SWE', 'GBR']
-            titles = ['(a)', '(b)', '(c)', '(d)']
+            titles = ['(a) Germany', '(b) Spain', '(c) Sweden', '(d) Great Britain']
 
             mpl.rcParams['font.family'] = 'Times New Roman'
             fig, axes = plt.subplots(2, 2)
@@ -40,7 +40,7 @@ def main() -> None:
                 ax.set_ylim(5, 90)
                 ax.set_title(title, loc='left', y=0.9)
 
-            fig.subplots_adjust(bottom=0.2)
+            fig.subplots_adjust(bottom=0.15, hspace=-0.175, wspace=0.075)
             norm = mpl.colors.Normalize(-100 / 2, 100)
             cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap="Reds"), cax=plt.axes([0.25, 0.1, 0.5, 0.025]),
                                 orientation='horizontal')
