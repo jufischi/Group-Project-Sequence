@@ -289,10 +289,13 @@ the calculated Fr\'{e}chet distances. More importantly, choosing different
 distance matrices (geographic vs. effective) has an impact on the actual
 geographic spread that is calculated. In Figure~\ref{fig:world_comp}, this is
 only indicated as this plots only one data point per country. Still, we can see
-a transition completely vanishing: Mexiko $\rightarrow$ Canada is only present
+transitions vanishing completely: Mexiko $\rightarrow$ Canada is only present
 when using the effective distances. This is intuitive, as having more passenger
 travel between airports increases the probability of viral spread between those
-places. 
+places. However, the actual spread might involve a combination of both matrices
+and (i.e. the virus is not only spreading via air travel but also via direct
+contact of individuals in close proximity of the airport), which makes the
+choice or even computation of the matrix hard.
 
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery 
