@@ -52,6 +52,17 @@
 \maketitle
 
 \begin{abstract}
+\cite{reimeringPhylogeographicReconstructionUsing2020} introduces the Sankoff
+algorithm for parsimony for phylogeographic reconstruction. For this, a
+pre-constructed phylogenetic tree is used as a base topology and the leaves are
+associated with geographic locations. Using different cost matrices, the authors
+compute the internal labels of the tree, i.e. they infer their geographic
+location. One advantage of this approach is the fast computation of trees
+compared to other methods such as bayesian inference. 
+In this report, provide an implementation of the Sankoff algorithm for
+parsimony-based phylogegraphic reconstruction and reconstruct a phylogegraphic
+tree for the 2009 H1N1 pandemic using an asymmetric $3865 \times 3865$ distance
+matrix with a runtime of less than three minutes on a consumer device. 
 \end{abstract}
 
 
