@@ -23,23 +23,19 @@
 \title{The Sankoff Algorithm for Phylogeographics}
 
 
-\author{
-  Julia Fischer \\
+\author{ Julia Fischer \\
   Universität Tübingen \\
   \texttt{juli.fischer@student.uni-tuebingen.de} \\
   6039174 \\
-  \And
-  Peter Heringer \\
+  \And Peter Heringer \\
   Universität Tübingen \\
   \texttt{peter.heringer@student.uni-tuebingen.de} \\
   6109174 \\
-  \And 
-  Michael Mederer \\
+  \And Michael Mederer \\
   Universität Tübingen \\
   \texttt{michael.mederer@student.uni-tuebingen.de} \\
   6120487 \\
-  \And 
-  Felix Seidel \\
+  \And Felix Seidel \\
   Universität Tübingen \\
   \texttt{felix.seidel@student.uni-tuebingen.de} \\
   5969276 \\
@@ -62,78 +58,78 @@ pre-constructed phylogenetic tree is used as a base topology and the leaves are
 associated with geographic locations. Using different cost matrices, the authors
 compute the internal labels of the tree, i.e., they infer their geographic
 location. One advantage of this approach is the fast computation of trees
-compared to other methods such as Bayesian inference. 
-In this report, we provide an implementation of the Sankoff algorithm for
-parsimony-based phylogeographic reconstruction and reconstruct a phylogeographic
-tree for the 2009 H1N1 pandemic using an asymmetric $3865 \times 3865$ distance
-matrix with a runtime of less than three minutes on a consumer device. 
+compared to other methods such as Bayesian inference. In this report, we provide
+an implementation of the Sankoff algorithm for parsimony-based phylogeographic
+reconstruction and reconstruct a phylogeographic tree for the 2009 H1N1 pandemic
+using an asymmetric $3865 \times 3865$ distance matrix with a runtime of less
+than three minutes on a consumer device. 
 \end{abstract}
 
 \ \\
 \section{Introduction}
-Given a rooted tree $T$ with labeled leaves, the small parsimony problem is about
-finding labels for the internal nodes of the tree such that the changes from an
-internal node to all of its children are minimal
-\cite{jonesIntroductionBioinformaticsAlgorithms2004}.
-Among others, the Sankoff algorithm can be used to solve the small parsimony
-problem \cite{sankoffMinimalMutationTrees1975}. 
+Given a rooted tree $T$ with labeled leaves, the small parsimony problem is
+about finding labels for the internal nodes of the tree such that the changes
+from an internal node to all of its children are minimal
+\cite{jonesIntroductionBioinformaticsAlgorithms2004}. Among others, the Sankoff
+algorithm can be used to solve the small parsimony problem
+\cite{sankoffMinimalMutationTrees1975}. 
 
-Sankoff's algorithm is designed to use an already existing phylogenetic tree with labeled leaves and
-some form of cost matrix to label the internal nodes in a way that minimizes the cost based on the
-matrix and underlying topology. For this the algorithm uses two phases: a
-forward pass and a backward pass.
-Starting with the parents of the leaves, the forward pass fills a
-list detailing what choosing a certain label would incur in
-cost for every node. For this, the cost for the transition from each possible state of the
-parent to each possible state of the children must be calculated, which has an
-estimated complexity of $\mathcal{O}(k^2)$ where $k$ is the number of possible
-states. This calculation has to be done for each node in the tree, thus we
-estimate the runtime of the forward pass
-with $\mathcal{O}(nk^2)$ where $n$ is the number of nodes in the tree and $k$ is
-the number of possible states each node can take.
-The second part is the backward pass. Starting with the root, the algorithm
-chooses the correct label based on the cost lists. This results in the labeled
-tree. For this, each node has to be visited once. Hence, we estimate the
-complexity of the backward pass with $\mathcal{O}(nk)$ where $n$ is the number of
-nodes in the tree and $k$ is the number of states each node can take.
+Sankoff's algorithm is designed to use an already existing phylogenetic tree
+with labeled leaves and some form of cost matrix to label the internal nodes in
+a way that minimizes the cost based on the matrix and underlying topology. For
+this the algorithm uses two phases: a forward pass and a backward pass. Starting
+with the parents of the leaves, the forward pass fills a list detailing what
+choosing a certain label would incur in cost for every node. For this, the cost
+for the transition from each possible state of the parent to each possible state
+of the children must be calculated, which has an estimated complexity of
+$\mathcal{O}(k^2)$ where $k$ is the number of possible states. This calculation
+has to be done for each node in the tree, thus we estimate the runtime of the
+forward pass with $\mathcal{O}(nk^2)$ where $n$ is the number of nodes in the
+tree and $k$ is the number of possible states each node can take. The second
+part is the backward pass. Starting with the root, the algorithm chooses the
+correct label based on the cost lists. This results in the labeled tree. For
+this, each node has to be visited once. Hence, we estimate the complexity of the
+backward pass with $\mathcal{O}(nk)$ where $n$ is the number of nodes in the
+tree and $k$ is the number of states each node can take.
 
-The Sankoff algorithm is usually applied to the broader scope of
-inferring phylogenetic trees using cost matrices that model the transition
-between different DNA or RNA nucleotides
-\cite{jonesIntroductionBioinformaticsAlgorithms2004}, i.e., solving the large parsimony problem. By
-using different cost
-matrices, the algorithm can also be used to model other biological questions,
-for example in the Camin-Sokal-Parsimony \cite{caminMethodDeducingBranching1965}
-or in the Dollo-Parsimony \cite{farrisPhylogeneticAnalysisDollo2022}. More
-recently, the Sankoff algorithm was also used to infer the geographic origins of
-the 2009 H1N1 pandemic using a distance matrix that represents the distances of
-various international airports
-\cite{reimeringPhylogeographicReconstructionUsing2020}. In this, the authors use
-a phylogenetic tree that represents the relationship between different strains
-of the virus and map each taxon to the airport that is closest to the sampling
-location. Then, three different cost matrices are utilized:
+The Sankoff algorithm is usually applied to the broader scope of inferring
+phylogenetic trees using cost matrices that model the transition between
+different DNA or RNA nucleotides
+\cite{jonesIntroductionBioinformaticsAlgorithms2004}, i.e., solving the large
+parsimony problem. By using different cost matrices, the algorithm can also be
+used to model other biological questions, for example in the
+Camin-Sokal-Parsimony \cite{caminMethodDeducingBranching1965} or in the
+Dollo-Parsimony \cite{farrisPhylogeneticAnalysisDollo2022}. More recently, the
+Sankoff algorithm was also used to infer the geographic origins of the 2009 H1N1
+pandemic using a distance matrix that represents the distances of various
+international airports \cite{reimeringPhylogeographicReconstructionUsing2020}.
+In this, the authors use a phylogenetic tree that represents the relationship
+between different strains of the virus and map each taxon to the airport that is
+closest to the sampling location. Then, three different cost matrices are
+utilized:
 
 \begin{enumerate}
   \item Equal distance: Airports have a distance of 1 to each other.
   \item Geographic distance: The actual geographic distances between different
   airports are used.
-  \item Effective distances: An infection is more likely to spread from
-  airport $A$ to airport $B$ if there are many people traveling from $A$ to
-  $B$. Thus, the effective distances are calculated by using passenger data
-  for each combination of airports.
+  \item Effective distances: An infection is more likely to spread from airport
+  $A$ to airport $B$ if there are many people traveling from $A$ to $B$. Thus,
+  the effective distances are calculated by using passenger data for each
+  combination of airports.
 \end{enumerate}
 
 Using those cost matrices for airports and for the corresponding countries, the
 labels for the internal nodes of the tree are calculated and, thus, their
 geographic position.
 
-One of the advantages in using the Sankoff algorithm for this problem as opposed to more
-conventional approaches is, as the authors describe, a gain in performance. This is due to the fact
-that the Sankoff algorithm is comparatively simple. Additionally, large parts can be implemented as
-operations on matrices which can be done very quickly in modern computers because of easy
-parallelization and efficient libraries, such as BLAS \cite{lawsonBasicLinearAlgebra1979}. As
-data sets can be quite large due to a large
-amount of sequences and locations (in this case airports), having a fast
+One of the advantages in using the Sankoff algorithm for this problem as opposed
+to more conventional approaches is, as the authors describe, a gain in
+performance. This is due to the fact that the Sankoff algorithm is comparatively
+simple. Additionally, large parts can be implemented as operations on matrices
+which can be done very quickly in modern computers because of easy
+parallelization and efficient libraries, such as BLAS
+\cite{lawsonBasicLinearAlgebra1979}. As data sets can be quite large due to a
+large amount of sequences and locations (in this case airports), having a fast
 algorithm to even approximate the correct solution can be crucial.
 
 In the following report, we implement the method outlined in
@@ -143,28 +139,56 @@ by using the original data.
 \ \\
 \section{Material and Methods}
 The Sankoff algorithm was implemented using Python 3.10
-\cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy (1.24.1) \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
-efficient matrix operations, which were necessary for performing the forward pass with an input distance matrix of 3865 $\times$ 3865 entries. We implemented Sankoff as a class, which parses a given Newick string and distance matrix. The algorithm can then be executed by calling \texttt{perform\_sankoff} on the resulting object, which runs the two separate functions for the forward and backward pass. The result is a \texttt{Node} object, which represents a whole reconstructed phylogenetic tree.
+\cite{pythonsoftwarefoundationWelcomePythonOrg2023} and Numpy (1.24.1)
+\cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
+efficient matrix operations, which were necessary for performing the forward
+pass with an input distance matrix of 3865 $\times$ 3865 entries. We implemented
+Sankoff as a class, which parses a given Newick string and distance matrix. The
+algorithm can then be executed by calling \texttt{perform\_sankoff} on the
+resulting object, which runs the two separate functions for the forward and
+backward pass. The result is a \texttt{Node} object, which represents a whole
+reconstructed phylogenetic tree.
 
 The base phylogenetic tree that we used is the H1N1 phylogeny described by
-\cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculations,
-we used the effective and geographic distance matrices from
+\cite{reimeringPhylogeographicReconstructionUsing2020}. For the calculations, we
+used the effective and geographic distance matrices from
 \cite{reimeringDistanceMatricesParsimonious2019}. 
 
-All visualizations were done using Python and Matplotlib (3.6.3) \cite{MatplotlibVisualizationPython}. To accurately plot the maps and the locations of the
-airports we used Geopandas (0.12.2) \cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata (20221121) \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations of
-airports and pycountry (22.3.5) \cite{theunePycountryISOCountry} to translate letter codes
-of countries. The resulting visualizations show the given reconstructed tree mapped onto the world map, where each transition from one country to another is only mapped once even though the same transition could happen several times at different locations in the tree. Thus, this visualizes the geographic information contained in the tree rather than the tree itself.
+All visualizations were done using Python and Matplotlib (3.6.3)
+\cite{MatplotlibVisualizationPython}. To accurately plot the maps and the
+locations of the airports we used Geopandas (0.12.2)
+\cite{GeoPandas12GeoPandas}. Additionally, we used the package airportsdata
+(20221121) \cite{borsettiAirportsdataExtensiveDatabase2022} to get the locations
+of airports and pycountry (22.3.5) \cite{theunePycountryISOCountry} to translate
+letter codes of countries. The resulting visualizations show the given
+reconstructed tree mapped onto the world map, where each transition from one
+country to another is only mapped once even though the same transition could
+happen several times at different locations in the tree. Thus, this visualizes
+the geographic information contained in the tree rather than the tree itself.
 
-We calculated Fr\'{e}chet distances as a measure of comparing our results to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. Fr\'{e}chet tree distances can be used to compare phylogeographic trees that are inferred from the same taxa. This is done by comparing the paths of locations that lead from every leaf node to the root, calculating their discrete Fr\'{e}chet distance and correcting this distance by the number of paths leading through each node. For this computation the geographic distances are used \cite{reimeringFrechetTreeDistance2018}. We used the implementation provided in \cite{reimeringFrechetTreeDistance2018} for the calculation.
+We calculated Fr\'{e}chet distances as a measure of comparing our results to the
+ones from \cite{reimeringPhylogeographicReconstructionUsing2020}. Fr\'{e}chet
+tree distances can be used to compare phylogeographic trees that are inferred
+from the same taxa. This is done by comparing the paths of locations that lead
+from every leaf node to the root, calculating their discrete Fr\'{e}chet
+distance and correcting this distance by the number of paths leading through
+each node. For this computation the geographic distances are used
+\cite{reimeringFrechetTreeDistance2018}. We used the implementation provided in
+\cite{reimeringFrechetTreeDistance2018} for the calculation.
 
-Further information that can be drawn from the reconstructed trees are hot-spots in the spread of the looked-at pandemic. These are the airports or countries with the highest number of outgoing flights to new locations. We computed these by traversing through the reconstructed trees and keeping a dictionary of the number of children of a node that had a different label assigned to them than their parent node.
+Further information that can be drawn from the reconstructed trees are hot-spots
+in the spread of the looked-at pandemic. These are the airports or countries
+with the highest number of outgoing flights to new locations. We computed these
+by traversing through the reconstructed trees and keeping a dictionary of the
+number of children of a node that had a different label assigned to them than
+their parent node.
 
-To compare our implementation with the implementation that
-was provided in \cite{reimeringPhylogeographicReconstructionUsing2020} in terms of runtime, we
+To compare our implementation with the implementation that was provided in
+\cite{reimeringPhylogeographicReconstructionUsing2020} in terms of runtime, we
 executed the Sankoff implementation using the built-in command \texttt{time} on
-a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R) Core(TM) i5-
-10210U CPU @ 1.60GHz CPU and 16G RAM for the geographic distance matrix for airports.
+a Linux notebook running \texttt{6.1.2-arch1-1} with a four core Intel(R)
+Core(TM) i5- 10210U CPU @ 1.60GHz CPU and 16G RAM for the geographic distance
+matrix for airports.
 
 \ \\
 \section{Results}
@@ -178,33 +202,56 @@ For the given input phylogeny, we computed four different internal labelings:
     \item one based on the effective distances between countries
 \end{itemize}
 
-Our tree that is based on the geographic distances between airports differs from the corresponding tree given in
-\cite{reimeringPhylogeographicReconstructionUsing2020} in
-one node, the trees that are based
-on the effective geographic distances between airports are equal. 
+Our tree that is based on the geographic distances between airports differs from
+the corresponding tree given in
+\cite{reimeringPhylogeographicReconstructionUsing2020} in one node, the trees
+that are based on the effective geographic distances between airports are equal. 
 
-Therefore, we also place the origin of the outbreak in Mexico and identify North America as the region which the virus mostly spread from (Figure \ref{fig:world_comp}). This holds true for all computed internal labelings. Mapping all airports within one country to its center results in marginal differences between geographic and effective distances as seen in Figure \ref{fig:world_comp}. 
+Therefore, we also place the origin of the outbreak in Mexico and identify North
+America as the region which the virus mostly spread from (Figure
+\ref{fig:world_comp}). This holds true for all computed internal labelings.
+Mapping all airports within one country to its center results in marginal
+differences between geographic and effective distances as seen in Figure
+\ref{fig:world_comp}. 
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth,trim={1.5cm 0 1.5cm 0}]{country_effective_country.pdf}
-    \caption{\textbf{Reconstructed spread using (a) effective and (b) geographic distances.} Geographic distances are defined as the actual distance between two airports. Effective distances were measured by the number of passengers transiting between two airports within one year. To allow for a clear visualization, all airports located in the same country were mapped to the center of the corresponding country. In both cases the root of the tree is placed in Mexico (striped in dark red). Further, most outgoing edges are rooted in North America. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
+    \caption{\textbf{Reconstructed spread using (a) effective and (b) geographic
+    distances.} Geographic distances are defined as the actual distance between
+    two airports. Effective distances were measured by the number of passengers
+    transiting between two airports within one year. To allow for a clear
+    visualization, all airports located in the same country were mapped to the
+    center of the corresponding country. In both cases the root of the tree is
+    placed in Mexico (striped in dark red). Further, most outgoing edges are
+    rooted in North America. The spread was visualized using Matplotlib
+    \cite{MatplotlibVisualizationPython} in combination with Geopandas
+    \cite{GeoPandas12GeoPandas}.}%
     \label{fig:world_comp}
 \end{figure}
 
-\subsection{Fr\'{e}chet distances}
-To compare our inferred phylogeographic trees to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}, we calculated Fr\'{e}chet tree distances. We did this only for the trees we reconstructed using airport data. The Fr\'{e}chet tree distance between the trees based on geographic distances was 123.849, while the distance for the trees reconstructed based on effective distances was 0.
+\subsection{Fr\'{e}chet distances} To compare our inferred phylogeographic trees
+to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}, we
+calculated Fr\'{e}chet tree distances. We did this only for the trees we
+reconstructed using airport data. The Fr\'{e}chet tree distance between the
+trees based on geographic distances was 123.849, while the distance for the
+trees reconstructed based on effective distances was 0.
 
 Further, we computed the distances between the trees we calculated using
 effective and geographic distances. The distance between the trees based on
-effective and geographic airport distances was 65149. For the
-country-based trees the distance was slightly less with 12307.03. A comparison
-of airport- to country-inferred trees was not possible because the Fr\'{e}chet
-distance calculation is based on a geographic distance matrix, which should be
-applicable to both compared trees.
+effective and geographic airport distances was 65149. For the country-based
+trees the distance was slightly less with 12307.03. A comparison of airport- to
+country-inferred trees was not possible because the Fr\'{e}chet distance
+calculation is based on a geographic distance matrix, which should be applicable
+to both compared trees.
 
 \subsection{Hot-spots}
-From the reconstructed phylogeographic trees, the hot-spots, i.e., the airports that contributed the most to spreading the virus, could be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstructed the tree using effective and geographic airport data, respectively.
+From the reconstructed phylogeographic trees, the hot-spots, i.e., the airports
+that contributed the most to spreading the virus, could be inferred. Tables
+\ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic}
+show the top 6 airports with the largest number of outgoing flights when we
+reconstructed the tree using effective and geographic airport data,
+respectively.
 
 \begin{table}[h!]
 \centering
@@ -241,11 +288,15 @@ airport & no. of outgoing flights \\
 }
 \end{table}
 
-In case of the country data and using geographic distances as well as effective distances for the tree reconstruction, the USA and Mexico are the countries with the most outgoing flights to other countries. Apart from them only two other countries, namely Spain and Canada, have contributed to the spread across countries.
+In case of the country data and using geographic distances as well as effective
+distances for the tree reconstruction, the USA and Mexico are the countries with
+the most outgoing flights to other countries. Apart from them only two other
+countries, namely Spain and Canada, have contributed to the spread across
+countries.
 
 \subsection{Runtime}
-Our implementation of the Sankoff algorithm using the geographic distance
-matrix for airports took \texttt{2m39.466s}, while the implementation provided in
+Our implementation of the Sankoff algorithm using the geographic distance matrix
+for airports took \texttt{2m39.466s}, while the implementation provided in
 \cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
 Our implementation is more than twice as fast for the $3865 \times 3865$
 distance matrix than the original implementation.
@@ -261,68 +312,74 @@ effective distance matrices with $3865 \times 3865$ entries.
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}
-        \node [align=center] {intNode96 \\ \texttt{IND}}
-          child {node [align=center] {f0dp319 \\ \texttt{IND}}}
-          child {node [align=center] {intNode97 \\ \texttt{IND/DTW}}
-            child {node [align=center] {f0dp45 \\ \texttt{IND}}}
-            child {node [align=center] {f0dp250 \\ \texttt{DTW}}}
-            child {node [align=center] {f0dp322 \\ \texttt{DTW}}}
-          };
+        \node [align=center] {intNode96 \\ \texttt{IND}} child {node
+          [align=center] {f0dp319 \\ \texttt{IND}}} child {node [align=center]
+          {intNode97 \\ \texttt{IND/DTW}} child {node [align=center] {f0dp45 \\
+          \texttt{IND}}} child {node [align=center] {f0dp250 \\ \texttt{DTW}}}
+          child {node [align=center] {f0dp322 \\ \texttt{DTW}}} };
     \end{tikzpicture}
     \caption{\textbf{The subtree rooted at \texttt{intNode96} of the
-    phylogenetic tree of H1N1}. For each node, the node ID as well as the computed
-    label based on the geographic distance matrix is displayed. Our implementation of Sankoff's algorithm computes the
-    label \texttt{DTW}, while the original implementation in
-    \cite{reimeringPhylogeographicReconstructionUsing2020} computed \texttt{IND}.}
+    phylogenetic tree of H1N1}. For each node, the node ID as well as the
+    computed label based on the geographic distance matrix is displayed. Our
+    implementation of Sankoff's algorithm computes the label \texttt{DTW}, while
+    the original implementation in
+    \cite{reimeringPhylogeographicReconstructionUsing2020} computed
+    \texttt{IND}.}
     \label{fig:subtree}
   \end{figure}
 
 The tree that our implementation computed for the geographic airport matrix
 differs from the H1N1 tree given by
-\cite{reimeringPhylogeographicReconstructionUsing2020} in one label. To be specific, we label the node
-\texttt{intNode97} with \texttt{DTW} (Detroit Metro Airport), while they find the label
-\texttt{IND} (Indianapolis International Airport). This difference is depicted
-in Figure~\ref{fig:subtree}.
-It is the result of different prioritization in the implementation:
-\texttt{intNode97} is the parent of three leaves, two of them labeled with
-\texttt{DTW} and the third is labeled with \texttt{IND}. The parent of
-\texttt{intNode97} is \texttt{intNode96} and has one additional child which is
-also a leaf labeled with \texttt{IND}. The distance between \texttt{IND}
-and \texttt{DTW} is $371.54$. Choosing either \texttt{IND} or \texttt{DTW} for
-\texttt{intNode97} yields the same cost for choosing \texttt{IND} for
-\texttt{intNode96}. Thus, from the perspective of maximum parsimony, both
-choices are optimal. Moreover, the real-world implications of this concrete
-difference should be small: Indianapolis and Detroit are cities that are close
-to each other. Further, for the H1N1 data,  the sampling locations for the
-leaves were mapped to the closest airport or, in the case of Mexico, all samples 
-were mapped to \texttt{MEX} \cite{reimeringDistanceMatricesParsimonious2019}. Thus, there is already a certain amount of
-distortion in the input data,
-which has at least the magnitude of the difference between Indianapolis and
-Detroit.
+\cite{reimeringPhylogeographicReconstructionUsing2020} in one label. To be
+specific, we label the node \texttt{intNode97} with \texttt{DTW} (Detroit Metro
+Airport), while they find the label \texttt{IND} (Indianapolis International
+Airport). This difference is depicted in Figure~\ref{fig:subtree}. It is the
+result of different prioritization in the implementation: \texttt{intNode97} is
+the parent of three leaves, two of them labeled with \texttt{DTW} and the third
+is labeled with \texttt{IND}. The parent of \texttt{intNode97} is
+\texttt{intNode96} and has one additional child which is also a leaf labeled
+with \texttt{IND}. The distance between \texttt{IND} and \texttt{DTW} is
+$371.54$. Choosing either \texttt{IND} or \texttt{DTW} for \texttt{intNode97}
+yields the same cost for choosing \texttt{IND} for \texttt{intNode96}. Thus,
+from the perspective of maximum parsimony, both choices are optimal. Moreover,
+the real-world implications of this concrete difference should be small:
+Indianapolis and Detroit are cities that are close to each other. Further, for
+the H1N1 data,  the sampling locations for the leaves were mapped to the closest
+airport or, in the case of Mexico, all samples were mapped to \texttt{MEX}
+\cite{reimeringDistanceMatricesParsimonious2019}. Thus, there is already a
+certain amount of distortion in the input data, which has at least the magnitude
+of the difference between Indianapolis and Detroit.
 
-In case of the effective airport matrix, the tree that our implementation computed is
-equal to the corresponding tree given by
+In case of the effective airport matrix, the tree that our implementation
+computed is equal to the corresponding tree given by
 \cite{reimeringPhylogeographicReconstructionUsing2020}. Both the difference for
 the geographic tree and the equality of the effective tree are also reflected in
-the calculated Fr\'{e}chet distances with values of 123.849 and 0, respectively. More importantly, choosing different
-distance matrices (geographic vs. effective) has an impact on the actual
-geographic spread that is calculated. This is indicated in Figure~\ref{fig:world_comp}, which plots a summary of all airports of each country into one data point per country instead of all airports. Still, we can see
-transitions vanishing completely: for instance, Mexico $\rightarrow$ Canada is only present
-when using the effective distances. Further, this can also be observed when looking at the computed hot-spots, i.e., the airports contributing the most to the spread of the virus. \texttt{PHX} and \texttt{LAX} are major hot-spots in the reconstructed tree using effective airport distances but aren't even present in the top hot-spots when looking at the reconstructed tree using geographic distances. This is intuitive, as having more passenger
-travel between airports increases the probability of viral spread between and from those
-places. However, the actual spread might involve a combination of both matrices (i.e., the virus is not only spreading via air travel but also via direct
-contact of individuals in close proximity of the airport), which makes the
-choice or even computation of the matrix hard.
+the calculated Fr\'{e}chet distances with values of 123.849 and 0, respectively.
+More importantly, choosing different distance matrices (geographic vs.
+effective) has an impact on the actual geographic spread that is calculated.
+This is indicated in Figure~\ref{fig:world_comp}, which plots a summary of all
+airports of each country into one data point per country instead of all
+airports. Still, we can see transitions vanishing completely: for instance,
+Mexico $\rightarrow$ Canada is only present when using the effective distances.
+Further, this can also be observed when looking at the computed hot-spots, i.e.,
+the airports contributing the most to the spread of the virus. \texttt{PHX} and
+\texttt{LAX} are major hot-spots in the reconstructed tree using effective
+airport distances but aren't even present in the top hot-spots when looking at
+the reconstructed tree using geographic distances. This is intuitive, as having
+more passenger travel between airports increases the probability of viral spread
+between and from those places. However, the actual spread might involve a
+combination of both matrices (i.e., the virus is not only spreading via air
+travel but also via direct contact of individuals in close proximity of the
+airport), which makes the choice or even computation of the matrix hard.
 
 Due to its fast computation, the Sankoff implementation enables rapid
-experiments to plot the spread on the globe and to accelerate the discovery 
-of the origin of a disease
-(Figure~\ref{fig:world_comp}). In comparison with an algorithm needing much more time,
-this can also be done incrementally, allowing the current predictions to be
-updated with new arrivals of data. This can be particularly useful in the first stages
-of a pandemic when new data might arrive very quickly to challenge the current
-estimations. While the algorithmic inference of the origin must be
-treated with caution as it is not precise
+experiments to plot the spread on the globe and to accelerate the discovery of
+the origin of a disease (Figure~\ref{fig:world_comp}). In comparison with an
+algorithm needing much more time, this can also be done incrementally, allowing
+the current predictions to be updated with new arrivals of data. This can be
+particularly useful in the first stages of a pandemic when new data might arrive
+very quickly to challenge the current estimations. While the algorithmic
+inference of the origin must be treated with caution as it is not precise
 \cite{reimeringPhylogeographicReconstructionUsing2020}, it is also worth noting
 that in the case of global pandemics, the determination of the origin of the
 disease can have undesired, societal implications if not treated with caution
@@ -330,17 +387,17 @@ disease can have undesired, societal implications if not treated with caution
 
 If one is interested in how the disease was imported into a specific country or
 region, the information that can be extracted from the labeling given by Sankoff
-is limited: There might be many incoming routes to one airport or country. However,
-the computed tree for H1N1 does not give detailed historical ordering besides
-the order on the path from the root to a leaf, i.e., it
-does not indicate which connection occurred first. In Figure~\ref{fig:Europe},
-we visualize this for the four European countries Germany, Spain, the United
+is limited: There might be many incoming routes to one airport or country.
+However, the computed tree for H1N1 does not give detailed historical ordering
+besides the order on the path from the root to a leaf, i.e., it does not
+indicate which connection occurred first. In Figure~\ref{fig:Europe}, we
+visualize this for the four European countries Germany, Spain, the United
 Kingdom and Sweden. It is not obvious which of the incoming routes to London,
 say, actually imported the virus first.
 
-We have seen that Sankoff enables rapid tree labeling for large trees and
-large distance matrices in the early stages of a pandemic. Depending on the
-choice of the distance matrix, this can incorporate various spread models, e.g., for
+We have seen that Sankoff enables rapid tree labeling for large trees and large
+distance matrices in the early stages of a pandemic. Depending on the choice of
+the distance matrix, this can incorporate various spread models, e.g., for
 viruses or neophytes. However, the results may be useless if the chosen distance
 matrix does not model the geographical movement correctly. The prediction for a
 disease that is transmitted by birds will likely be wrong if it is based on
@@ -352,7 +409,15 @@ virus or different new species better.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\linewidth,trim={0.5cm 0 0.5cm 0}]{airport_effective_europe.pdf}
-    \caption{\textbf{Reconstructed paths from Mexico towards different European countries using effective distances.} Effective distances were measured by the number of passengers transiting between two airports within one year. Each panel holds all possible paths ending in (a) Germany, (b) Spain, (c) Sweden or (d) United Kingdom. The root is placed in Mexico City International Airport (marked as dark red). The country of origin Mexico is striped in dark red. The spread was visualized using Matplotlib \cite{MatplotlibVisualizationPython} in combination with Geopandas \cite{GeoPandas12GeoPandas}.}%
+    \caption{\textbf{Reconstructed paths from Mexico towards different European
+    countries using effective distances.} Effective distances were measured by
+    the number of passengers transiting between two airports within one year.
+    Each panel holds all possible paths ending in (a) Germany, (b) Spain, (c)
+    Sweden or (d) United Kingdom. The root is placed in Mexico City
+    International Airport (marked as dark red). The country of origin Mexico is
+    striped in dark red. The spread was visualized using Matplotlib
+    \cite{MatplotlibVisualizationPython} in combination with Geopandas
+    \cite{GeoPandas12GeoPandas}.}%
     \label{fig:Europe}
 \end{figure}
 
@@ -372,10 +437,16 @@ The code for this project can be found at:
 
 This includes the following:
 \begin{itemize}
-    \item the \texttt{ensure\_data.py} file, which needs to be run with the option \texttt{-\texttt{-}download} to download the data we used for the tree reconstruction
-    \item the \texttt{phylogeographics.py} file, which runs Sankoff on all 4 input options and saves the reconstructed trees in Newick format
-    \item the generated plots as well as the python scripts we used to generate them (\texttt{phylogeographics\_country.py} and \texttt{phylogeographics\_europe.py})
-    \item python files including classes and python scripts needed to perform Sankoff as well as visualize and explore the resulting trees
+    \item the \texttt{ensure\_data.py} file, which needs to be run with the
+    option \texttt{-\texttt{-}download} to download the data we used for the
+    tree reconstruction
+    \item the \texttt{phylogeographics.py} file, which runs Sankoff on all 4
+    input options and saves the reconstructed trees in Newick format
+    \item the generated plots as well as the python scripts we used to generate
+    them (\texttt{phylogeographics\_country.py} and
+    \texttt{phylogeographics\_europe.py})
+    \item python files including classes and python scripts needed to perform
+    Sankoff as well as visualize and explore the resulting trees
 \end{itemize} 
 
 \end{document}
