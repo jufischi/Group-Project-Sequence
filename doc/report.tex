@@ -130,11 +130,11 @@ geographic position.
 One of the advantages in using the Sankoff algorithm for this problem as opposed to more
 conventional approaches is, as the authors describe, a gain in performance. This is due to the fact
 that the Sankoff algorithm is comparatively simple. Additionally, large parts can be implemented as
-operations on matrices which can be done very quick in modern computers because of easy
+operations on matrices which can be done very quickly in modern computers because of easy
 parallelization and efficient libraries, such as BLAS \cite{lawsonBasicLinearAlgebra1979}. As
 data sets can be quite large due to a large
 amount of sequences and locations (in this case airports), having a fast
-algorithm to even approximate the correct solution can be instrumental in getting a solution.
+algorithm to even approximate the correct solution can be crucial.
 
 In the following report, we implement the method outlined in
 \cite{reimeringPhylogeographicReconstructionUsing2020} and recreate the findings
@@ -195,7 +195,13 @@ Therefore, we also place the origin of the outbreak in Mexico and identify North
 \subsection{Fr\'{e}chet distances}
 To compare our inferred phylogeographic trees to the ones from \cite{reimeringPhylogeographicReconstructionUsing2020}, we calculated Fr\'{e}chet tree distances. We did this only for the trees we reconstructed using airport data. The Fr\'{e}chet tree distance between the trees based on geographic distances was 123.849, while the distance for the trees reconstructed based on effective distances was 0.
 
-Further, we calculated the distances between the trees we calculated using effective and geographic distances. The distance between the trees based on effective and geographic distances between airports was 65149. For the country-based trees the distance was slightly less with 12307.03. A comparison of airport- to country-inferred trees was not possible because the Fr\'{e}chet distance calculation is based on a geographic distance matrix, which should be applicable to both compared trees.
+Further, we computed the distances between the trees we calculated using
+effective and geographic distances. The distance between the trees based on
+effective and geographic airport distances was 65149. For the
+country-based trees the distance was slightly less with 12307.03. A comparison
+of airport- to country-inferred trees was not possible because the Fr\'{e}chet
+distance calculation is based on a geographic distance matrix, which should be
+applicable to both compared trees.
 
 \subsection{Hot-spots}
 From the reconstructed phylogeographic trees, the hot-spots, i.e., the airports that contributed the most to spreading the virus, could be inferred. Tables \ref{tab: hotspots airport effective} and \ref{tab: hotspots airport geographic} show the top 6 airports with the largest number of outgoing flights when we reconstructed the tree using effective and geographic airport data, respectively.
@@ -235,7 +241,7 @@ airport & no. of outgoing flights \\
 }
 \end{table}
 
-In case of the country data and using geographic as well as effective distances for the tree reconstruction, the USA and Mexico are the countries with by far the most outgoing flights to other countries. Apart from them only two other countries, namely Spain and Canada, have contributed to the spread across countries.
+In case of the country data and using geographic distances as well as effective distances for the tree reconstruction, the USA and Mexico are the countries with the most outgoing flights to other countries. Apart from them only two other countries, namely Spain and Canada, have contributed to the spread across countries.
 
 \subsection{Runtime}
 Our implementation of the Sankoff algorithm using the geographic distance
@@ -332,9 +338,9 @@ we visualize this for the four European countries Germany, Spain, the United
 Kingdom and Sweden. It is not obvious which of the incoming routes to London,
 say, actually imported the virus first.
 
-We have seen that Sankoff enables rapid tree generation for large trees and
+We have seen that Sankoff enables rapid tree labeling for large trees and
 large distance matrices in the early stages of a pandemic. Depending on the
-choice of the distance matrix, this can model various spread models, e.g., for
+choice of the distance matrix, this can incorporate various spread models, e.g., for
 viruses or neophytes. However, the results may be useless if the chosen distance
 matrix does not model the geographical movement correctly. The prediction for a
 disease that is transmitted by birds will likely be wrong if it is based on
