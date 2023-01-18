@@ -6,6 +6,7 @@
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
+\usepackage{biblatex}
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
@@ -16,6 +17,8 @@
 \usepackage{todonotes}
 \usepackage[]{tikz}
 \usetikzlibrary{graphs, positioning}
+
+\addbibresource{references.bib}
 
 \title{The Sankoff Algorithm for Phylogeographics}
 
@@ -348,8 +351,9 @@ virus or different new species better.
 \end{figure}
 
 \newpage
-\bibliographystyle{unsrt}  
-\bibliography{references} 
+% \bibliographystyle{unsrt}  
+% \bibliography{references} 
+\printbibliography
 
 \newpage
 \appendix
