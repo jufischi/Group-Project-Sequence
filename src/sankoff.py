@@ -6,7 +6,9 @@ import numpy as np
 
 class Sankoff:
     """
-    A class used to parse a Newick String and generate a tree from it.
+    A class used to parse a Newick String and generate a tree from it. Uses the given mapping to assign the
+    corresponding airports to the leaf nodes, which are labelled by sample ID in the Newick string. This is needed for
+    later performing Sankoff on the tree.
 
     Attributes
     ----------
