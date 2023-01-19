@@ -98,7 +98,7 @@ different DNA or RNA nucleotides
 \cite{jonesIntroductionBioinformaticsAlgorithms2004}, i.e., solving the large
 parsimony problem. By using different cost matrices, the algorithm can also be
 used to model other biological questions, for example in the
-Camin-Sokal-Parsimony \cite{caminMethodDeducingBranching1965} or in the
+Camin-Sokal-Parsimony \cite{caminMethodDeducingBranching1965} or the
 Dollo-Parsimony \cite{farrisPhylogeneticAnalysisDollo2022}. More recently, the
 Sankoff algorithm was also used to infer the geographic origins of the 2009 H1N1
 pandemic using a distance matrix that represents the distances of various
@@ -143,7 +143,7 @@ The Sankoff algorithm was implemented using Python 3.10
 \cite{harrisArrayProgrammingNumPy2020}. Numpy was used to allow the use of
 efficient matrix operations, which were necessary for performing the forward
 pass with an input distance matrix of 3865 $\times$ 3865 entries. We implemented
-Sankoff as a class, which parses a given Newick string and distance matrix. The
+Sankoff as a class, with helpers that parse a given Newick string and distance matrix. The
 algorithm can then be executed by calling \texttt{perform\_sankoff} on the
 resulting object, which runs the two separate functions for the forward and
 backward pass. The result is a \texttt{Node} object, which represents a whole
@@ -290,7 +290,7 @@ airport & no. of outgoing flights \\
 
 In case of the country data and using geographic distances as well as effective
 distances for the tree reconstruction, the USA and Mexico are the countries with
-the most outgoing flights to other countries. Apart from them only two other
+the most outgoing flights to other countries. Apart from these, only two other
 countries, namely Spain and Canada, have contributed to the spread across
 countries.
 
@@ -298,8 +298,9 @@ countries.
 Our implementation of the Sankoff algorithm using the geographic distance matrix
 for airports took \texttt{2m39.466s}, while the implementation provided in
 \cite{reimeringPhylogeographicReconstructionUsing2020} took \texttt{6m32.557s}.
-Our implementation is more than twice as fast for the $3865 \times 3865$
-distance matrix than the original implementation.
+Our implementation is roughly twice as fast for the $3865 \times 3865$
+distance matrix than the original implementation in this simple test run. 
+However, for a concrete statement about the runtime more data is necessary.
 
 \ \\
 \section{Discussion}
@@ -370,7 +371,7 @@ more passenger travel between airports increases the probability of viral spread
 between and from those places. However, the actual spread might involve a
 combination of both matrices (i.e., the virus is not only spreading via air
 travel but also via direct contact of individuals in close proximity of the
-airport), which makes the choice or even computation of the matrix hard.
+airport), which makes the choice and computation of the matrix hard.
 
 Due to its fast computation, the Sankoff implementation enables rapid
 experiments to plot the spread on the globe and to accelerate the discovery of
