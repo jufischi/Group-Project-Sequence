@@ -49,14 +49,14 @@ def create_parser():
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
 
     p.add_argument('-c', '--clean',
-                   help="Clean the data directory", action=argparse.BooleanOptionalAction)
+                   help="Clean the data directory", action="store_true")
 
     p.add_argument('-d', '--download',
-                   help="Download the data files", action=argparse.BooleanOptionalAction)
+                   help="Download the data files", action="store_true")
 
     p.add_argument('-n', '--no-op',
                    help="Only perform a dry-run of the action, don't actually do something",
-                   action=argparse.BooleanOptionalAction)
+                   action="store_true")
 
     return (p.parse_args())
 
