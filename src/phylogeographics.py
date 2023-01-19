@@ -93,7 +93,7 @@ def main() -> None:
                     variant_annotation.writelines(variant_tree.get_annotation())
 
             mpl.rcParams['font.family'] = 'Times New Roman'
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(8, 4.5))
             TreeVisualizer.draw_tree(variant_tree, ax)
 
             fig.subplots_adjust(bottom=0.1)
@@ -103,6 +103,7 @@ def main() -> None:
             cbar.ax.get_xaxis().set_ticks([-100 / 2, 100], labels=["src", "dest"])
             cbar.outline.set_visible(False)
 
+            plt.savefig(os.path.join(cwd, "doc", variant_name + "_every.png"), dpi=150)
             plt.show()
 
 

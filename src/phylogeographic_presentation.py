@@ -1,78 +1,59 @@
 from tree_visualizer import TreeVisualizer
 from matplotlib import pyplot as plt
-from newick_parser import NewickParser
-from phylogeographics import AirportTipMapper
 import os
 from tree_visualizer import Airport
-import matplotlib as mpl
+from tree import Node
 
 
 def main() -> None:
     cwd = ".."
-    with open(os.path.join(cwd, "data", "pH1N1_until_20093004_cds_rooted.labeled.phy"), "r"):
-        airport_mapper = AirportTipMapper(os.path.join(cwd, "data", "tipdata.txt"))
-        variants = [
-            ("geographic.distance.matrix.csv", "airport_geographic", airport_mapper),
-        ]
+    first = [(Airport('MEX'), Airport('DAL')),
+             (Airport('MEX'), Airport('ELD')),
+             (Airport('MEX'), Airport('LAX')),
+             (Airport('MEX'), Airport('SAB'))]
+    second = [(Airport('DAL'), Airport('JFK')),
+              (Airport('DAL'), Airport('ATA')),
+              (Airport('DAL'), Airport('OBI')),
+              (Airport('DAL'), Airport('RAE'))]
+    third = [(Airport('JFK'), Airport('YYZ')),
+             (Airport('JFK'), Airport('AMD')),
+             (Airport('JFK'), Airport('TAI')),
+             (Airport('JFK'), Airport('WIC'))]
+    fourth = [(Airport('YYZ'), Airport('STR')),
+              (Airport('YYZ'), Airport('ABU')),
+              (Airport('YYZ'), Airport('BUR')),
+              (Airport('YYZ'), Airport('ABI'))]
 
-        for variant_matrix_name, variant_name, variant_mapper in variants:
-            print(f"current variant: {variant_name}")
-            variant_file_path = os.path.join(cwd, "data", f"{variant_name}.txt")
-            variant_tree = None
-            if os.path.exists(variant_file_path):
-                print(f"variant file {variant_file_path} found, reusing...")
-                with open(variant_file_path, "r") as variant_file:
-                    variant_newick = variant_file.readlines()[0]
-                    parser = NewickParser(variant_newick)
-                    parser.parse()
-                    variant_tree = parser.root
+    travel = [first, second, third, fourth]
+
+    route = []
+    x = 80
+    y = 45
+    center = (first[0][0].x, first[0][0].y)
+    for idx, t in enumerate(travel):
+        fig, ax = plt.subplots(figsize=(8, 4.5))
+        TreeVisualizer.draw_tree(Node, ax, map=False)
+
+        i = 0
+        route.extend(t)
+        ax.plot(center[0], center[1], "", color="tomato", marker="o", markersize=3, zorder=4)
+        for src, dest in route:
+            if i % 4 == 0 and idx < 4:
+                ax.plot([src.x, dest.x], [src.y, dest.y], "-", color="blue", marker="o", markersize=3, zorder=3)
             else:
-                print(f"variant file {variant_file_path} not found, please perform Sankoff")
+                ax.plot([src.x, dest.x], [src.y, dest.y], "-", color="royalblue", marker="o", markersize=3,
+                        zorder=2)
+            i += 1
 
-            tree_labels = [(Airport('MEX'), Airport('MEX')),
-                           (Airport('MEX'), Airport('DAL')),
-                           (Airport('DAL'), Airport('ELD')),
-                           (Airport('ELD'), Airport('ELD')),
-                           (Airport('ELD'), Airport('ELD')),
-                           (Airport('ELD'), Airport('JBR')),
-                           (Airport('JBR'), Airport('JBR')),
-                           (Airport('JBR'), Airport('JBR')),
-                           (Airport('JBR'), Airport('JBR')),
-                           (Airport('JBR'), Airport('JBR')),
-                           (Airport('JBR'), Airport('JBR')),
-                           (Airport('JBR'), Airport('JBR')),
-                           (Airport('JBR'), Airport('LNS')),
-                           (Airport('LNS'), Airport('MUC')),
-                           (Airport('MUC'), Airport('MUC'))]
+        if idx < 3:
+            ax.set_xlim(center[0]-x, center[0]+x)
+            ax.set_ylim(center[1]-y, center[1]+y)
 
-            connections = []
-            tree = variant_tree
-            for i, label in enumerate(tree_labels):
-                for a in [0.2, 1]:
-                    fig, ax = plt.subplots()
-                    ax.set_xlim(-130, 25)
-                    ax.set_ylim(5, 90)
-                    TreeVisualizer.draw_tree(variant_tree, ax, map=False)
+        x = x * 1.25
+        y = y * 1.25
 
-                    for src, dest in tree_labels[0:i]:
-                        ax.plot([src.x, dest.x], [src.y, dest.y], "-", color="blue", marker="o", markersize=3,
-                                zorder=3, alpha=a)
-
-                    for src, dest in connections:
-                        ax.plot([src.x, dest.x], [src.y, dest.y], "-", color="blue", marker="o", markersize=3,
-                                    zorder=2, alpha=0.2)
-                    plt.show()
-
-                # end
-                new_connections = TreeVisualizer.collect_connections(tree, num_children=1)
-                connections.extend(new_connections)
-                for child in tree.children:
-                    if child.data == tree_labels[i][1].name:
-                        tree = child
-
-
-            #fig.subplots_adjust(bottom=0.15, hspace=-0.175, wspace=0.075)
-            #plt.savefig(os.path.join(cwd, "doc", variant_name + "_europe.pdf"), dpi=150)
+        plt.savefig(os.path.join(cwd, "doc", "example_" + str(idx) + ".png"), dpi=150)
+        plt.show()
 
 
 if __name__ == '__main__':
