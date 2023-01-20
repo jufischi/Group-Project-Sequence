@@ -24,12 +24,23 @@ def main() -> None:
               (Airport('YYZ'), Airport('BUR')),
               (Airport('YYZ'), Airport('ABI'))]
 
-    travel = [first, second, third, fourth]
+    travel = [first, second, third, fourth, []]
 
     route = []
-    x = 80
-    y = 45
+    x = 80 / 1.25
+    y = 45 / 1.25
     center = (first[0][0].x, first[0][0].y)
+
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    TreeVisualizer.draw_tree(Node, ax, map=False)
+    ax.plot(center[0], center[1], "", color="tomato", marker="o", markersize=3, zorder=4)
+    ax.set_xlim(center[0] - x, center[0] + x)
+    ax.set_ylim(center[1] - y, center[1] + y)
+    plt.savefig(os.path.join(cwd, "doc", "example_" + str(0) + ".png"), dpi=450)
+    plt.show()
+    x = x * 1.25
+    y = y * 1.25
+
     for idx, t in enumerate(travel):
         fig, ax = plt.subplots(figsize=(8, 4.5))
         TreeVisualizer.draw_tree(Node, ax, map=False)
@@ -40,8 +51,14 @@ def main() -> None:
         for src, dest in route:
             if i % 4 == 0 and idx < 4:
                 ax.plot([src.x, dest.x], [src.y, dest.y], "-", color="blue", marker="o", markersize=3, zorder=3)
-            else:
+            elif idx < 4:
                 ax.plot([src.x, dest.x], [src.y, dest.y], "-", color="royalblue", marker="o", markersize=3,
+                        zorder=2)
+            elif i % 4 == 0:
+                ax.plot([src.x, dest.x], [src.y, dest.y], linestyle="", color="blue", marker="o", markersize=3,
+                        zorder=3)
+            else:
+                ax.plot([src.x, dest.x], [src.y, dest.y], linestyle="", color="royalblue", marker="o", markersize=3,
                         zorder=2)
             i += 1
 
@@ -52,7 +69,7 @@ def main() -> None:
         x = x * 1.25
         y = y * 1.25
 
-        plt.savefig(os.path.join(cwd, "doc", "example_" + str(idx) + ".png"), dpi=150)
+        plt.savefig(os.path.join(cwd, "doc", "example_" + str(idx+1) + ".png"), dpi=450)
         plt.show()
 
 
